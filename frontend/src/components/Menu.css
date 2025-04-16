@@ -1,0 +1,120 @@
+.menu {
+    background-color: #292929; 
+    color: white;
+    width: 20%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px; 
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .user-profile {
+    padding: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #444444;
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #00bcd4; /* Avatar placeholder */
+    margin-right: 15px;
+  }
+  
+  .user-info {
+    flex-grow: 1;
+  }
+  
+  .username {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .email {
+    font-size: 0.9em;
+    color: #cccccc;
+  }
+  
+  .menu-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .menu-item {
+    padding: 12px 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+  }
+  
+  .menu-item:hover, .menu-item.active {
+    background-color: #333333;
+  }
+  
+  .menu-item.active {
+    font-weight: bold;
+    border: 2px solid #000000; 
+    border-radius: 5px;
+    padding-left: 30px;
+    padding-right: 12px; 
+  }
+  
+  .menu-item svg { 
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .sign-out-button {
+    background-color: #d9232d;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: auto; 
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 50px;
+    font-size: 18px;
+    display: flex;
+    transition: background-color 0.3s ease;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .sign-out-button:hover {
+    background-color: #b31b23; 
+  }
+
+  
+  .sign-out-button svg {
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
+    fill: white;
+  }
+
+  .logo {
+    border: none;
+    border-radius: 100%;
+  }
+
+  .icon {
+    width: 25px;
+    height: 25px;
+    margin-right: 20px;
+  }
+
+  .log-out-icon {
+    width: 25px;
+    height: 25px;
+    margin-left: 20px;
+  }
