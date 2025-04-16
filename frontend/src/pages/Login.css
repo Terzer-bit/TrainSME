@@ -1,0 +1,136 @@
+/* Global Styles */
+body,
+html {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  /* Prevents accidental scrollbars */
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+}
+
+.login-page {
+  background-image: url('../assets/login_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.particles-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.login-container {
+  background-color: rgba(18, 18, 18, 0.99);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  width: 22.5%;
+  z-index: 2;
+}
+
+.logo-container {
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+}
+
+.login-title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-input {
+  width: -webkit-fill-available;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: white;
+  color: #292929;
+  font-size: 16px;
+}
+
+.form-input::placeholder {
+  color: #aaaaaa;
+}
+
+.submit-button {
+  background-color: #d9232d;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.submit-button:hover {
+  background-color: #b31b23;
+}
+
+.register-text {
+  color: white;
+  font-size: 14px;
+  text-decoration: none;
+  display: block;
+  margin-top: 20px;
+}
+
+.register-link {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: none;
+  display: block;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.message {
+  color: #ffdd99;
+  /* Yellow color for error */
+  margin-top: 15px;
+}
+
+.rowContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  margin-left: 20px;
+}
