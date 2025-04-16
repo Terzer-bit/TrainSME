@@ -11,6 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+
+# rest files
+loginRoutes.rest
 
 # Editor directories and files
 .vscode/*
