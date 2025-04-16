@@ -7,7 +7,7 @@ function PasswordManager() {
 
   return (
     <div>
-      <Menu/>
+      <Menu />
     </div>
   );
 }

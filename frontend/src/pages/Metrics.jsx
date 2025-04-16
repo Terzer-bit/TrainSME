@@ -7,7 +7,7 @@ function Metrics() {
 
   return (
     <div>
-      <Menu/>
+      <Menu />
     </div>
   );
 }

@@ -7,7 +7,7 @@ function PhishingTest() {
 
   return (
     <div>
-      <Menu/>
+      <Menu />
     </div>
   );
 }

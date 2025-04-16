@@ -97,30 +97,30 @@ html {
     padding: 10px;
     text-align: left;
     padding-bottom: 20px;
-  }
+}
 
-  .main-features-title {
+.main-features-title {
     font-size: 2em;
     margin-bottom: 20px;
     text-align: center;
-  }
+}
 
-  .card-container {
+.card-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
-  }
+}
 
-  .card-title {
+.card-title {
     font-size: 18px;
     margin-bottom: 10px;
     text-align: center;
-  }
+}
 
-  .card-description {
+.card-description {
     font-size: 1em;
     line-height: 1.4;
     color: #dddddd;
-  }
+}
