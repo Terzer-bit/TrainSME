@@ -1,0 +1,10 @@
+@host = http://localhost:5000/api/phishing-test
+
+
+POST {{host}}
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "score": 5
+}

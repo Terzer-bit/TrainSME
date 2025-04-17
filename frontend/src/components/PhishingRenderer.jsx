@@ -1,0 +1,43 @@
+import React from 'react';
+import './PhishingRenderer.css'; // Make sure to have the CSS
+
+const PhishingRenderer = ({ currentCase }) => {
+  if (!currentCase) {
+    return <p>No email case to display.</p>;
+  }
+
+  return (
+    <div className="email-case">
+      <div className="email-header">
+        <div className="header-top">
+          <h1>{currentCase.subject}</h1>
+        </div>
+        <div className="sender-info">
+          <div className="sender-avatar">
+            {/* Placeholder for Sender Avatar/Logo */}
+            <div className="avatar-placeholder"></div>
+          </div>
+          <div className="sender-details">
+            <div className="sender-name">{currentCase.senderName}</div>
+            <div className="sender-email">{currentCase.senderEmail}</div>
+          </div>
+          <div className="email-date">
+            {currentCase.date} {/* Date from case data */}
+          </div>
+        </div>
+      </div>
+
+      <div className="email-body-area">
+        <div className="email-content">
+          <p>{currentCase.body}</p> {/* Now just render the body directly */}
+
+          {currentCase.links && currentCase.links.map((link, i) => (
+            <p key={i}><a href={link.href} target="_blank" rel="noopener noreferrer">{link.text}</a></p>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PhishingRenderer;

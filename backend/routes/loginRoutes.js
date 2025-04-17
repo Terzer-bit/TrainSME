@@ -19,7 +19,12 @@ router.post('/api/login', async (req, res) => {
       return res.status(401).json({ error: 'Incorrect username or password' });
     }
 
-    res.json({ message: 'Successful login' });
+    res.json({ 
+      message: 'Successful login',
+      user_id: user.user_id,
+      username: user.username,
+      email: user.email
+    });
     
   } catch (err) {
     console.error('Login error:', err);

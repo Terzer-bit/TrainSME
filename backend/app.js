@@ -3,11 +3,13 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./db/db')
 const loginRoutes = require('./routes/loginRoutes');
+const phishingTestRoutes = require('./routes/phishingTestRoutes');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(loginRoutes);
+app.use(phishingTestRoutes);
 
 
 const PORT = process.env.PORT || 5000;

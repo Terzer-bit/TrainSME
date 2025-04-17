@@ -23,6 +23,11 @@ function Login() {
       const data = await res.json();
       if (res.ok) {
         setMessage('Login successful');
+
+        localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('email', data.email);
+
         navigate('/home')
       } else {
         setMessage(data.error || 'Authentication error');

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Menu.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import pfp from '../assets/blank-profile.svg';
@@ -12,6 +12,21 @@ function Menu() {
     const [activeItem, setActiveItem] = useState(null); // keep track of the items
     const navigate = useNavigate();
     const location = useLocation(); // use location to detect how the state should change
+    const [userInfo, setUserInfo] = useState({
+        user_id: '',
+        username: '',
+        email: ''
+      });
+
+    useEffect(() => {
+        const user_id = localStorage.getItem('user_id');
+        const username = localStorage.getItem('username');
+        const email = localStorage.getItem('email');
+        if (username && email) {
+          setUserInfo({ user_id, username, email });
+        }
+      }, []);
+      
 
     const handleItemClick = (itemName) => {
         setActiveItem(itemName);
@@ -30,7 +45,7 @@ function Menu() {
     };
 
     // Determine active item based on path
-    React.useEffect(() => {
+    useEffect(() => {
         const path = location.pathname;
         if (path.includes('phishing-test') || path.includes('home')) {
             setActiveItem('Phishing simulator');
@@ -51,8 +66,8 @@ function Menu() {
                     <img src={pfp} alt="Profile picture" className="logo" />
                 </div>
                 <div className="user-info">
-                    <div className="username">Username</div> {/* use localstorage to pass user info*/}
-                    <div className="email">example@email.com</div>
+                    <div className="username">{userInfo.username}</div>
+                    <div className="email">{userInfo.email}</div>
                 </div>
             </div>
 

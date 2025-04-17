@@ -1,0 +1,133 @@
+/* components/PhishingRenderer.css */
+
+.email-case {
+    background-color: #f9f9f9; /* Light grey background like in the image */
+    border-radius: 8px;
+    overflow: hidden; /* Clip content for rounded corners */
+    border: 1px solid #e0e0e0; /* Light border */
+    color: #333;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .email-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .header-top h1 {
+    font-size: 1.6em;
+    margin: 0;
+    font-weight: normal; /* Adjust font weight if needed */
+  }
+  
+  .sender-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .sender-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+    overflow: hidden; /* Ensure avatar stays rounded */
+  }
+  
+  .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #999; /* Grey placeholder for avatar */
+    border-radius: 50%;
+  }
+  
+  
+  .sender-details {
+    flex-grow: 1;
+  }
+  
+  .sender-name {
+    font-weight: bold;
+    font-size: 1em;
+  }
+  
+  .sender-email {
+    font-size: 0.9em;
+    color: #777;
+  }
+  
+  .email-date {
+    font-size: 0.85em;
+    color: #777;
+    white-space: nowrap; /* Prevent date from wrapping */
+  }
+  
+  
+  .email-body-area {
+    padding: 20px;
+  }
+  
+  .email-content {
+    line-height: 1.5;
+    font-size: 1em;
+  }
+  
+  .email-content p {
+    margin-bottom: 12px;
+    text-align: left; /* Ensure text is left-aligned */
+  }
+  
+  .email-content a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .email-content a:hover {
+    text-decoration: underline;
+  }
+  
+  .event-details {
+    margin-top: 20px;
+    padding-left: 20px;
+  }
+  
+  .event-details p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .event-details .icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    background-color: #ccc; /* Placeholder for icons */
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+  }
+  
+  .event-details .calendar-icon {
+    background-color: #888; /* Example color for calendar icon */
+    /* You would typically use an actual icon image or font icon here */
+  }
+  
+  .event-details .time-icon {
+    background-color: #888; /* Example color for time icon */
+  }
+  
+  .event-details .location-icon {
+    background-color: #888; /* Example color for location icon */
+  }
