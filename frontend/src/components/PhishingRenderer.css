@@ -5,7 +5,7 @@
     border-radius: 8px;
     overflow: hidden; /* Clip content for rounded corners */
     border: 1px solid #e0e0e0; /* Light border */
-    color: #333;
+    color: #292929;
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -45,7 +45,7 @@
   .avatar-placeholder {
     width: 100%;
     height: 100%;
-    background-color: #999; /* Grey placeholder for avatar */
+    background-color: #999999; /* Grey placeholder for avatar */
     border-radius: 50%;
   }
   
@@ -76,8 +76,9 @@
   }
   
   .email-content {
-    line-height: 1.5;
+    line-height: 1.2;
     font-size: 1em;
+    white-space: pre-line;
   }
   
   .email-content p {
@@ -130,4 +131,11 @@
   
   .event-details .location-icon {
     background-color: #888; /* Example color for location icon */
+  }
+
+  .email-image {
+    max-width: 600px;
+    max-height: 300px;
+    height: auto;
+    width: auto;
   }

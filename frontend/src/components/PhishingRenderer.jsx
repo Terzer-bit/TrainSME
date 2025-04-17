@@ -22,17 +22,19 @@ const PhishingRenderer = ({ currentCase }) => {
             <div className="sender-email">{currentCase.senderEmail}</div>
           </div>
           <div className="email-date">
-            {currentCase.date} {/* Date from case data */}
+            {currentCase.date}
           </div>
         </div>
       </div>
 
       <div className="email-body-area">
         <div className="email-content">
-          <p>{currentCase.body}</p> {/* Now just render the body directly */}
-
+          <p>{currentCase.body}</p>
+          {currentCase.image && (
+            <img src={currentCase.image} alt="Email visual" className="email-image" />
+          )}
           {currentCase.links && currentCase.links.map((link, i) => (
-            <p key={i}><a href={link.href} target="_blank" rel="noopener noreferrer">{link.text}</a></p>
+              <p key={i}><a  href={link.href}  target="_blank"  rel="noopener noreferrer" onClick={(e) => e.preventDefault()}> {link.text} </a></p>
           ))}
         </div>
       </div>
