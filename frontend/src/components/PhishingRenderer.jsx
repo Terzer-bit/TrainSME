@@ -14,8 +14,11 @@ const PhishingRenderer = ({ currentCase }) => {
         </div>
         <div className="sender-info">
           <div className="sender-avatar">
-            {/* Placeholder for Sender Avatar/Logo */}
+          {currentCase.avatar ? (
+            <img src={currentCase.avatar} alt="Email visual" className="email-avatar" />
+          ) : (
             <div className="avatar-placeholder"></div>
+          )}
           </div>
           <div className="sender-details">
             <div className="sender-name">{currentCase.senderName}</div>
@@ -33,9 +36,11 @@ const PhishingRenderer = ({ currentCase }) => {
           {currentCase.image && (
             <img src={currentCase.image} alt="Email visual" className="email-image" />
           )}
-          {currentCase.links && currentCase.links.map((link, i) => (
+          <div className="email-link">
+            {currentCase.links && currentCase.links.map((link, i) => (
               <p key={i}><a  href={link.href}  target="_blank"  rel="noopener noreferrer" onClick={(e) => e.preventDefault()}> {link.text} </a></p>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

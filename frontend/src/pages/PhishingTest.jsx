@@ -6,6 +6,7 @@ import Menu from '../components/Menu';
 import PhishingRenderer from '../components/PhishingRenderer';
 import Modal from '../components/Modal';
 import { emailCases } from '../utils/cases';
+import ResultRenderer from '../components/ResultRenderer';
 
 function PhishingTest() {
 
@@ -19,6 +20,7 @@ function PhishingTest() {
       username: '',
       email: ''
     });
+  const [finished, setFinished] = useState(false);
 
   const navigate = useNavigate();
   
@@ -30,6 +32,7 @@ function PhishingTest() {
 
   // Run once on mount
   useEffect(() => {
+    setFinished(false);
     const cases = getRandomSubset(emailCases, 10);
     setTestCases(cases);
 
@@ -51,17 +54,15 @@ function PhishingTest() {
     setShowModal(true);
   };
 
-  // Insert test results to the database
+  // Insert test results to the database and activate the results component
   const handleResults = async () => {
+    setFinished(true);
     const user_id = parseInt(userInfo.user_id);
     const res = await fetch('http://localhost:5000/api/phishing-test', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id, score })
     });
-
-
-    navigate('/results', { state: { score, total: testCases.length } });
   }
 
   const handleNext = () => {
@@ -81,33 +82,37 @@ function PhishingTest() {
   return (
     <div className="phishing-test-page">
       <Menu />
-      <div className="phishing-test-content">
-        <div className="email-container">
-          <PhishingRenderer currentCase={currentCase} />
+      {!finished ? (
+        <div className="phishing-test-content">
+          <div className="email-container">
+            <PhishingRenderer currentCase={currentCase} />
+          </div>
+
+
+          {!selectedAnswer ? (
+            <div className="decision-buttons">
+              <button className="decision-button safe-button" onClick={() => handleAnswer("Safe")}>Safe</button>
+              <button className="decision-button phishing-button" onClick={() => handleAnswer("Phishing")}>Phishing</button>
+            </div>
+          ) : (
+            <div className="feedback-section">
+              <p className={selectedAnswer === currentCase.solution ? 'correct-answer' : 'incorrect-answer'}>
+                {selectedAnswer === currentCase.solution ? 'Correct!' : 'Incorrect!'}
+              </p>
+              <button className="decision-button phishing-button" onClick={handleNext}>Next</button>
+            </div>
+          )}
+          {showModal && (
+            <Modal
+              explanation={currentCase.explanation}
+              onClose={handleCloseModal}
+            />
+          )}
+
         </div>
-
-
-        {!selectedAnswer ? (
-          <div className="decision-buttons">
-            <button className="decision-button safe-button" onClick={() => handleAnswer("Safe")}>Safe</button>
-            <button className="decision-button phishing-button" onClick={() => handleAnswer("Phishing")}>Phishing</button>
-          </div>
-        ) : (
-          <div className="feedback-section">
-            <p className={selectedAnswer === currentCase.solution ? 'correct-answer' : 'incorrect-answer'}>
-              {selectedAnswer === currentCase.solution ? 'Correct!' : 'Incorrect!'}
-            </p>
-            <button className="decision-button phishing-button" onClick={handleNext}>Next</button>
-          </div>
-        )}
-        {showModal && (
-          <Modal
-            explanation={currentCase.explanation}
-            onClose={handleCloseModal}
-          />
-        )}
-
-      </div>
+      ):(
+        <ResultRenderer score={8} />
+      )}  
     </div>
   );
 }
