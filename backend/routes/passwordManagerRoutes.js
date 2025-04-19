@@ -162,7 +162,6 @@ router.post('/api/password-manager/see', async (req, res) => {
 });
 
 
-
 router.delete('/api/password-manager/delete', async (req, res) => {
     const { service, user_id } = req.body;
 
@@ -213,6 +212,30 @@ router.get('/api/password-manager/exists', async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
+
+router.post('/api/password-manager/services', async (req, res) => {
+    const { user_id } = req.body;
+  
+    if (!user_id) {
+      return res.status(400).json({ error: 'Missing user_id' });
+    }
+  
+    try {
+      const result = await pool.query(
+        `SELECT service_id, service_name, salt, iv, subkey
+         FROM services
+         WHERE user_id = $1`,
+        [user_id]
+      );
+  
+      return res.json({ services: result.rows });
+    } catch (error) {
+      console.error('Error fetching services:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
 
 module.exports = router;

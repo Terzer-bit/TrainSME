@@ -3,7 +3,7 @@ import './Service.css';
 import trashIcon from '../assets/trash-2-neg.svg';
 import copyIcon from '../assets/copy.svg'
 
-function Service({ serviceName = "Google" }) {
+function Service({ serviceName, fetchServices }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalText, setModalText] = useState("");
@@ -90,15 +90,39 @@ function Service({ serviceName = "Google" }) {
     
             const data = await addResponse.json();
             console.log('Service generated successfully.');
-    
-            // Step 4: Refresh the view
-            await handleSee();
+            handleSee();
     
         } catch (err) {
             console.error('Unexpected error in handleGenerate:', err);
         }
     };
     
+    const handleDelete = async () => {
+        try {
+            const deleteResponse = await fetch('http://localhost:5000/api/password-manager/delete', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    service: serviceName,
+                    user_id: user_id
+                }),
+            });
+
+            if (!deleteResponse.ok) {
+                const errorData = await deleteResponse.json();
+                console.error('Delete request failed:', errorData);
+                return;
+            }
+
+            console.log('Service deleted successfully.');
+            fetchServices(); // Re-fetch services after deletion
+
+        } catch (err) {
+            console.error('Unexpected error in handleDelete:', err);
+        }
+    };
 
 
     const copyToClipboard = () => {
@@ -111,7 +135,7 @@ function Service({ serviceName = "Google" }) {
             <div className="service">
                 <div className="service-header" onClick={toggleExpand}>
                     <div className="service-logo">
-                        <img src="/google.jpg" alt="service picture" className="logo" />
+                        <img src="/lock.png" alt="service picture" className="logo" />
                     </div>
                     <span className="service-name">{serviceName}</span>
                     <button className="expand-toggle">{isExpanded ? "▲" : "▼"}</button>
@@ -124,7 +148,7 @@ function Service({ serviceName = "Google" }) {
                         <button className="see-button" onClick={() => handleSee()}>
                             See Password
                         </button>
-                        <button className="delete-button">
+                        <button className="delete-button" onClick={() => handleDelete()}>
                             <img src={trashIcon} alt="Delete icon" className="icon" />
                         </button>
                     </div>
