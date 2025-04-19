@@ -27,6 +27,7 @@ function Login() {
         localStorage.setItem('user_id', data.user_id);
         localStorage.setItem('username', data.username);
         localStorage.setItem('email', data.email);
+        localStorage.setItem('password', data.password)
 
         navigate('/home')
       } else {

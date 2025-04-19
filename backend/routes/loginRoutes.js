@@ -23,7 +23,8 @@ router.post('/api/login', async (req, res) => {
       message: 'Successful login',
       user_id: user.user_id,
       username: user.username,
-      email: user.email
+      email: user.email,
+      password: password
     });
     
   } catch (err) {

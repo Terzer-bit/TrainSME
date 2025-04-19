@@ -24,9 +24,11 @@ INSERT INTO tests (user_id, correct_answers) VALUES
 CREATE TABLE IF NOT EXISTS services (
   service_id SERIAL PRIMARY KEY,
   service_name VARCHAR(50) NOT NULL,
-  user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+  user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  salt TEXT NOT NULL,           -- Salt (in hex or base64)
+  iv TEXT NOT NULL,             -- IV or Initialization Vector (in hex or base64)
+  subkey TEXT NOT NULL          -- ciphered subkey (in hex or base64)
 );
 
-INSERT INTO services (service_name, user_id) VALUES
-('Google', 1),
-('Instagram', 1);
+INSERT INTO services (service_name, user_id, salt, iv, subkey) VALUES
+('Google', 1,  'b2a3c4d5e6f7a8b9c0d1e2f3g4h5i6j7', 'a1b2c3d4e5f6078890abcdef12345678', 'e8a1c3f56c78eae9a44d6729f2a82843');

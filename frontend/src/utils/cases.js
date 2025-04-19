@@ -219,7 +219,7 @@ export const emailCases = [
     avatar: "/amazon.jpg",
     date: "Mon, 15 Apr, 14:25",
     body: `We've detected suspicious activity on your Amazon account and have temporarily suspended it. Please verify your identity to restore access.`,
-    links: [{ text: "Verify Identity", href: "https://amazon.com/account-verify" }],
+    links: [{ text: "Verify Identity", href: "https://amazonia.com/account-verify" }],
     solution: "Phishing",
     explanation: "Phishing attempt posing as Amazon. The link redirects to a fake Amazon page designed to steal your login credentials."
   },
