@@ -111,7 +111,7 @@ function PhishingTest() {
 
         </div>
       ):(
-        <ResultRenderer score={8} />
+        <ResultRenderer score={score} />
       )}  
     </div>
   );
