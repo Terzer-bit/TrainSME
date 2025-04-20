@@ -2,11 +2,11 @@ CREATE TABLE IF NOT EXISTS users (
   user_id SERIAL PRIMARY KEY,
   username VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL UNIQUE,
-  master_hash VARCHAR(64) -- No need to store it as BYTEA
+  hashed_password VARCHAR(64) -- No need to store it as BYTEA
   --encryption_salt BYTEA Already included on the bcrypt hash
 );
 
-INSERT INTO users (username, email, master_hash) VALUES
+INSERT INTO users (username, email, hashed_password) VALUES
 ('juanillopepinillo', 'juan@example.com', '$2a$12$v1yAc3TKrHZU.QMxH0MKB.HXwvjrLZN/5XcFO4jDEIAXDInCBfXke'),
 ('analopez', 'ana@example.com', '$2a$12$.F0AaKAcaf.h03cYZybft.4nHNsPuf0o3pO./x6vI4kZYjJvAOni.');
 
@@ -31,4 +31,4 @@ CREATE TABLE IF NOT EXISTS services (
 );
 
 INSERT INTO services (service_name, user_id, salt, iv, subkey) VALUES
-('Google', 1,  'b2a3c4d5e6f7a8b9c0d1e2f3g4h5i6j7', 'a1b2c3d4e5f6078890abcdef12345678', 'e8a1c3f56c78eae9a44d6729f2a82843');
+('Google', 2,  'd17ed7d02e12fd4096c959ee38346bf5', '0db82c636e953c0c74b822e28dc28a4d', '75cdeddeb93493ccf65b81b5c252642875c8f89b7822725c81095aa41946cb2c');

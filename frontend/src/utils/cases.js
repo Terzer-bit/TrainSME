@@ -245,6 +245,23 @@ export const emailCases = [
     links: [{ text: "Verify Account", href: "https://netflix.com/verify" }],
     solution: "Safe",
     explanation: "This is a legitimate verification email from Netflix. Always ensure that the email is coming from the official netflix.com domain before clicking any link."
+  },
+  {
+    id: 21,
+    subject: "Instruments for sale at cheap price!",
+    senderName: "John Doe",
+    senderEmail: "johndoe1995@gmail.com",
+    date: "Sun, 14 Apr, 16:30",
+    body: `Good evening,\n
+    I regret to anounce that my uncle died a week ago. In this sad moment, the owner of his apartement, has told us that he needs that aparment available as soon as possible.\n
+    My uncle had a lot of musical instruments and I can't keep them all, this is why I am reaching to you, a university colleague gave me your information and 
+    told me you like to play music. This is why I am offering you a piano for just 100€.\n
+    You can log in Wallapop to see the piano on sale and all the details.\n
+    Thanks in advance,\n\n
+    John`,
+    links: [{ text: "Log into Wallapop", href: "http://wa1lapop.com/login" }],
+    solution: "Phishing",
+    explanation: "The offer is too good to be true. On top of that, although the domain provided in the link uses a similar name than the original one, it has changed a lowercase 'L' for the number '1',  and it is an unsecure 'http' domain."
   }
  
 ];

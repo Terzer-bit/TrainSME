@@ -14,7 +14,7 @@ router.post('/api/login', async (req, res) => {
 
     const user = result.rows[0];
 
-    const isMatch = await bcrypt.compare(password, user.master_hash);
+    const isMatch = await bcrypt.compare(password, user.hashed_password);
     if (!isMatch) {
       return res.status(401).json({ error: 'Incorrect username or password' });
     }

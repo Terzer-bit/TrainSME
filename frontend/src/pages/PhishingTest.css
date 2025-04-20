@@ -116,6 +116,7 @@
 .modal-content {
     background-color: #fff;
     padding: 20px;
+    border: 1px solid #000;
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
     width: 25%; /* Adjust as needed */
