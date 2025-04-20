@@ -57,9 +57,6 @@ function cipherSubkey(master_password) {
     let cipheredSubkey = cipher.update(subkey, 'utf8', 'hex');
     cipheredSubkey += cipher.final('hex');
 
-    console.log("IV: ", iv);
-    console.log("IV hex", iv.toString('hex'));
-
     return {
         cipheredSubkey,
         iv: iv.toString('hex'),
@@ -73,9 +70,6 @@ function decipherSubkey(master_password, salt, iv, cipheredSubkey) {
 
     const derivedKeyHex = keyDerivate(master_password, salt);
     const derivedKey = Buffer.from(derivedKeyHex, 'hex'); // This is what createDecipheriv expects
-
-    console.log("IV hex: ", iv);
-    console.log("IV buffer", Buffer.from(iv, 'hex'));
 
     const ivBuffer = Buffer.from(iv, 'hex'); // Convert the iv from hex to Buffer
 
@@ -238,4 +232,4 @@ router.post('/api/password-manager/services', async (req, res) => {
   });
 
 
-module.exports = router;
+  module.exports = router;

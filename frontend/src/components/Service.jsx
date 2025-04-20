@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Service.css';
 import trashIcon from '../assets/trash-2-neg.svg';
 import copyIcon from '../assets/copy.svg'
@@ -127,6 +129,7 @@ function Service({ serviceName, fetchServices }) {
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(modalText);
+        toast.success("Password copied to clipboard! 📋");
         setShowModal(false)
     };
 
@@ -168,6 +171,7 @@ function Service({ serviceName, fetchServices }) {
                     </div>
                 </div>
             )}
+            <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} />
         </>
     );
 }
