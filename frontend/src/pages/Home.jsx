@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import Menu from '../components/Menu'
-import SpotlightCard from '../components/SpotlightCard';
+import SpotlightCard from '../utils/SpotlightCard';
 
 function Home() {
 

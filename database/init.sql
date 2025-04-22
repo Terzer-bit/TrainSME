@@ -2,13 +2,14 @@ CREATE TABLE IF NOT EXISTS users (
   user_id SERIAL PRIMARY KEY,
   username VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL UNIQUE,
-  hashed_password VARCHAR(64) -- No need to store it as BYTEA
-  --encryption_salt BYTEA Already included on the bcrypt hash
+  hashed_password VARCHAR(64), -- No need to store it as BYTEA, encryption_salt Already included on the bcrypt hash
+  enterprise VARCHAR(50) NOT NULL, 
+  admin BOOLEAN NOT NULL
 );
 
-INSERT INTO users (username, email, hashed_password) VALUES
-('juanillopepinillo', 'juan@example.com', '$2a$12$v1yAc3TKrHZU.QMxH0MKB.HXwvjrLZN/5XcFO4jDEIAXDInCBfXke'),
-('analopez', 'ana@example.com', '$2a$12$.F0AaKAcaf.h03cYZybft.4nHNsPuf0o3pO./x6vI4kZYjJvAOni.');
+INSERT INTO users (username, email, hashed_password, enterprise, admin) VALUES
+('admin', 'admin@example.com', '$2a$12$v1yAc3TKrHZU.QMxH0MKB.HXwvjrLZN/5XcFO4jDEIAXDInCBfXke', 'Cookies.SA', true),
+('analopez', 'ana@example.com', '$2a$12$.F0AaKAcaf.h03cYZybft.4nHNsPuf0o3pO./x6vI4kZYjJvAOni.', 'Cookies.SA', false);
 
 CREATE TABLE IF NOT EXISTS tests (
   test_id SERIAL PRIMARY KEY,
