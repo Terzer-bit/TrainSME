@@ -99,34 +99,10 @@ html {
   background-color: #b31b23;
 }
 
-.register-text {
-  color: white;
-  font-size: 14px;
-  text-decoration: none;
-  display: block;
-  margin-top: 20px;
-}
-
-.register-link {
-  color: white;
-  font-weight: bold;
-  font-size: 14px;
-  text-decoration: none;
-  display: block;
-  margin-top: 20px;
-  margin-left: 10px;
-}
-
 .message {
   color: #ffdd99;
   /* Yellow color for error */
   margin-top: 15px;
-}
-
-.rowContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
 }
 
 .icon {

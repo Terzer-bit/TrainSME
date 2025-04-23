@@ -84,10 +84,6 @@ function Login() {
             <span>Sign In</span> <span><img src={loginIcon} alt="Log in icon" className="icon" /></span>
           </button>
         </form>
-        <div className="rowContainer">
-          <p className="register-text">Don't have an account?</p>
-          <a href="" className="register-link">Register</a>
-        </div>
         {message && <p className="message">{message}</p>}
       </div>
     </div>

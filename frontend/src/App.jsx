@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import PhishingTest from './pages/PhishingTest';
 import PasswordManager from './pages/PasswordManager';
 import Metrics from './pages/Metrics';
+import EnterpriseMetrics from './pages/EnterpriseMetrics';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/phishing-test" element={<PhishingTest />} />
         <Route path="/password-manager" element={<PasswordManager />} />
         <Route path="/metrics" element={<Metrics />} />
+        <Route path="/enterprise-metrics" element={<EnterpriseMetrics />} />
       </Routes>
     </Router>
   );
