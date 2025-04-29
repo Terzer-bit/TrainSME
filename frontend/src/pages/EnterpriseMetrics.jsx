@@ -43,7 +43,7 @@ function EnterpriseMetrics() {
                     <div className="column-container">
                         <div className="row-container">
                             <div className="top-container top-best">
-                                <p className="card-title">Top Best</p>
+                                <p className="card-title">Top Best Results</p>
                                 {Object.entries(data.top_best[0]).map(([pos, user]) => (
                                     <div key={pos} className="user-profile-item">
                                         <div className="user-rank">{pos}</div>
@@ -56,7 +56,7 @@ function EnterpriseMetrics() {
                             </div>
 
                             <div className="top-container top-worst">
-                                <p className="card-title">Top Worst</p>
+                                <p className="card-title">Top Worst Results</p>
                                 {Object.entries(data.top_worst[0]).map(([pos, user]) => (
                                     <div key={pos} className="user-profile-item">
                                         <div className="user-rank">{pos}</div>
