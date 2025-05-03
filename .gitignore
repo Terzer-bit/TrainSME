@@ -4,4 +4,4 @@
 .vscode/
 .idea/
 
-database/data/
+/database/data/
