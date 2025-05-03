@@ -50,7 +50,7 @@ function Home() {
         </div>
 
         <div className="footer-section">
-          © 2025 TrainSME - All Rights Reserved
+          TrainSME © 2025 by Terzer-bit is licensed under CC BY 4.0
         </div>
       </div>
     </div>
