@@ -37,7 +37,7 @@ In case you don't have it, it can be downloaded from [here](https://www.docker.c
 
 *Note: In case the project was already run with the previous command, there is no need for the parameter --build anymore*
 
-5.  To access the running project, access the following address from your navigator:  
+5.  To access the running project, navigate to the following address on your navigator:  
 	``` 
 	http://localhost:5173/login
 	```  
