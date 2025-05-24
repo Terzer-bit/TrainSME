@@ -41,6 +41,12 @@ In case you don't have it, it can be downloaded from [here](https://www.docker.c
 	``` 
 	http://localhost:5173/login
 	```  
+6. Run the following command to stop the service:
+```
+	docker-compose down
+```
+
+*Note: Use parameter -v to delete all containers*
 
 ### <a name="contact"></a>Contact
 ---
