@@ -1,0 +1,49 @@
+# TrainSME
+
+### Table of Contents
+----
+1. [Project Overview](#projectoverview)
+2. [Getting Started](#gettingstarted)
+	- [Prerequisites](#prerequisites)
+	- [Installation](#installation)
+3. [Contact](#contact)
+
+### <a name="projectoverview"></a>Project Overview
+----
+This project presents a solution to reduce and prevent cyberattack cases on Small and Medium-Sized Enterprises or SMEs. It uses a phishing training approach, adding a password management feature.
+
+### <a name="gettingstarted"></a>Getting Started
+---
+
+#### <a name="prerequisites"></a>Prerequisites
+
+All users should have Docker installed.
+In case you don't have it, it can be downloaded from [here](https://www.docker.com/products/docker-desktop/)
+
+#### <a name="installation"></a>Installation and Execution
+
+1.  Clone the repository:  
+	```
+	git clone https://github.com/Terzer-bit/TrainSME.git
+	```  
+2. Execute docker desktop
+3. Change directory to the project folder:  
+	`` cd TrainSME `` *for PowerShell*  
+	`` chdir TrainSME`` *for cmd*  
+4. Run the following command to run the project for the first time:
+```
+	docker-compose up --build
+```
+
+*Note: In case the project was already run with the previous command, there is no need for the parameter --build anymore*
+
+5.  To access the running project, access the following address from your navigator:  
+	``` 
+	http://localhost:5173/login
+	```  
+
+### <a name="contact"></a>Contact
+---
+For any details contact the owner of the project on:
+- Email: garciavinapablo@gmail.com
+- LinkedIn: [pablo-garcía-viña](https://www.linkedin.com/in/pablo-garc%C3%ADa-vi%C3%B1a/)
