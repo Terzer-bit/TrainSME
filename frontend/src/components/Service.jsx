@@ -1,179 +1,60 @@
 import React, { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import './Service.css';
-import trashIcon from '../assets/trash-2-neg.svg';
-import copyIcon from '../assets/copy.svg'
 
-function Service({ serviceName, fetchServices }) {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [modalText, setModalText] = useState("");
-    const user_id = localStorage.getItem('user_id');
-    const password = localStorage.getItem('password');
+export default function Service({ serviceName, onCopy, onSee, onRegenerate, onDelete }) {
+  const [isExpanded, setIsExpanded] = useState(false);
 
-    const toggleExpand = () => setIsExpanded(prev => !prev);
+  return (
+    <div className="service-card">
+      <div className="service-card-header" onClick={() => setIsExpanded(!isExpanded)}>
+        <div className="service-left-area">
+          <div className="service-icon-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <span className="service-title-text">{serviceName}</span>
+        </div>
 
-    const handleSee = async () => {
-        const response = await fetch('http://localhost:5000/api/password-manager/see', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                service: serviceName,
-                user_id: user_id,
-                password: password // master password (used to derive key)
-            }),
-        });
+        <div className="service-quick-actions" onClick={(e) => e.stopPropagation()}>
+          {/* Botón de copia rápida fuera del modal */}
+          <button
+            className="quick-icon-btn copy"
+            title="Copy password to clipboard"
+            onClick={() => onCopy(serviceName)}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
 
-        const data = await response.json();
+          <button
+            className="quick-icon-btn delete"
+            title="Delete service"
+            onClick={() => onDelete(serviceName)}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </button>
+          
+          <span className="expand-indicator">{isExpanded ? '▲' : '▼'}</span>
+        </div>
+      </div>
 
-
-        setModalText(data.subkey);
-        setShowModal(true);
-    };
-
-    const handleGenerate = async () => {
-        try {
-            // Step 1: Check if the service already exists using the 'exists' route
-            const existsResponse = await fetch(`http://localhost:5000/api/password-manager/exists?user_id=${user_id}&service=${encodeURIComponent(serviceName)}`);
-            
-            if (!existsResponse.ok) {
-                const existsErrorData = await existsResponse.json();
-                console.error('Error checking if service exists:', existsErrorData);
-                return;
-            }
-    
-            const { exists } = await existsResponse.json();
-    
-            // Step 2: If it exists, delete it
-            if (exists) {
-                const deleteResponse = await fetch('http://localhost:5000/api/password-manager/delete', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        service: serviceName,
-                        user_id: user_id
-                    }),
-                });
-    
-                if (!deleteResponse.ok) {
-                    const errorData = await deleteResponse.json();
-                    console.error('Delete request failed:', errorData);
-                    return;
-                }
-    
-                console.log('Previous service deleted successfully.');
-            } else {
-                console.log('No existing service found. Proceeding to generate.');
-            }
-    
-            // Step 3: Add the new service
-            const addResponse = await fetch('http://localhost:5000/api/password-manager/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    service: serviceName,
-                    user_id: user_id,
-                    password: password
-                }),
-            });
-    
-            if (!addResponse.ok) {
-                const addErrorData = await addResponse.json();
-                console.error('Error adding new service:', addErrorData);
-                return;
-            }
-    
-            const data = await addResponse.json();
-            console.log('Service generated successfully.');
-            handleSee();
-    
-        } catch (err) {
-            console.error('Unexpected error in handleGenerate:', err);
-        }
-    };
-    
-    const handleDelete = async () => {
-        try {
-            const deleteResponse = await fetch('http://localhost:5000/api/password-manager/delete', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    service: serviceName,
-                    user_id: user_id
-                }),
-            });
-
-            if (!deleteResponse.ok) {
-                const errorData = await deleteResponse.json();
-                console.error('Delete request failed:', errorData);
-                return;
-            }
-
-            console.log('Service deleted successfully.');
-            fetchServices(); // Re-fetch services after deletion
-
-        } catch (err) {
-            console.error('Unexpected error in handleDelete:', err);
-        }
-    };
-
-
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(modalText);
-        toast.success("Password copied to clipboard! 📋");
-        setShowModal(false)
-    };
-
-    return (
-        <>
-            <div className="service">
-                <div className="service-header" onClick={toggleExpand}>
-                    <div className="service-logo">
-                        <img src="/lock.png" alt="service picture" className="logo" />
-                    </div>
-                    <span className="service-name">{serviceName}</span>
-                    <button className="expand-toggle">{isExpanded ? "▲" : "▼"}</button>
-                </div>
-                {isExpanded && (
-                    <div className="service-actions">
-                        <button className="generate-button" onClick={() => handleGenerate()}>
-                            Generate Password
-                        </button>
-                        <button className="see-button" onClick={() => handleSee()}>
-                            See Password
-                        </button>
-                        <button className="delete-button" onClick={() => handleDelete()}>
-                            <img src={trashIcon} alt="Delete icon" className="icon" />
-                        </button>
-                    </div>
-                )}
-            </div>
-
-            {showModal && (
-                <div className="modal-backdrop">
-                    <div className="modal">
-                        <button className="close-button" onClick={() => setShowModal(false)}>X</button>
-                        <div className="modal-text">
-                            <p className="modal-password">{modalText}</p>
-                        </div>
-                        <button className="copy-button" onClick={copyToClipboard}>
-                            <img src={copyIcon} alt="Copy icon" className="icon" />
-                        </button>
-                    </div>
-                </div>
-            )}
-            <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} />
-        </>
-    );
+      {isExpanded && (
+        <div className="service-expanded-drawer">
+          <button className="drawer-btn regenerate" onClick={() => onRegenerate(serviceName)}>
+            Regenerate password
+          </button>
+          <button className="drawer-btn see" onClick={() => onSee(serviceName)}>
+            See password
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
-
-export default Service;

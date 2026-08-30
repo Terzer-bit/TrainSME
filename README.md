@@ -32,14 +32,14 @@ In case you don't have it, it can be downloaded from [here](https://www.docker.c
 	`` chdir TrainSME`` *for cmd*  
 4. Run the following command to run the project for the first time:
 ```
-	docker-compose up --build
+	docker-compose up -d --build
 ```
 
 *Note: In case the project was already run with the previous command, there is no need for the parameter --build anymore*
 
 5.  To access the running project, navigate to the following address on your navigator:  
 	``` 
-	http://localhost:5173/login
+	http://localhost
 	```  
 6. Run the following command to stop the service:
 ```

@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import './Login.css';
 import logo from '../assets/Logo4-removebg.svg';
-import loginIcon from '../assets/log-in-neg.svg';
-import Particles from '../utils/Particles';
 
-function Login() {
+export default function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg('');
+    setLoading(true);
+
     try {
       const res = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
@@ -22,8 +22,6 @@ function Login() {
 
       const data = await res.json();
       if (res.ok) {
-        setMessage('Login successful');
-
         localStorage.setItem('user_id', data.user_id);
         localStorage.setItem('username', data.username);
         localStorage.setItem('email', data.email);
@@ -31,63 +29,53 @@ function Login() {
         localStorage.setItem('enterprise', data.enterprise);
         localStorage.setItem('admin', data.admin);
 
-        navigate('/home')
+        onLoginSuccess(data);
       } else {
-        setMessage(data.error || 'Authentication error');
+        setErrorMsg(data.error || 'Authentication error');
       }
     } catch (err) {
-      console.error('Failed to log in', err);
-      setMessage('Internal server error');
+      console.error(err);
+      setErrorMsg('Connection error to backend server');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="login-page">
-      <Particles
-        particleColors={["#b9fcfe", "#84c9e7", "#5392e0"]}
-        particleCount={200}
-        particleSpread={10}
-        speed={0.1}
-        particleBaseSize={100}
-        moveParticlesOnHover={true}
-        alphaParticles={false}
-        disableRotation={false}
-        className="particles-background"
-      />
-      <div className="login-container">
-        <div className="logo-container">
-          <img src={logo} alt="TrainSME Logo" className="logo" />
+    <div className="login-page-container">
+      <div className="login-card-box">
+        {/* Logo como título principal */}
+        <div className="login-logo-container">
+          <img src={logo} alt="TrainSME Logo" className="login-brand-logo" />
         </div>
-        <h2 className="login-title">Sign in</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-              required
-              className="form-input"
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              className="form-input"
-            />
-          </div>
-          <button type="submit" className="submit-button">
-            <span>Sign In</span> <span><img src={loginIcon} alt="Log in icon" className="icon" /></span>
+
+        <p className="app-brand-subtitle">Security Awareness & Vault Management</p>
+
+        <form onSubmit={handleSubmit} className="login-form-element">
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            className="login-input"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="login-input"
+          />
+
+          <button type="submit" className="login-submit-btn" disabled={loading}>
+            {loading ? 'Authenticating...' : 'Sign In'}
           </button>
         </form>
-        {message && <p className="message">{message}</p>}
+
+        {errorMsg && <div className="login-error-msg">{errorMsg}</div>}
       </div>
     </div>
   );
 }
-
-export default Login;

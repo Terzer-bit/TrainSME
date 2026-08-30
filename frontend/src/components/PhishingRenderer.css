@@ -1,118 +1,259 @@
-.email-case {
-    background-color: #f9f9f9; 
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #e0e0e0;
-    color: #292929;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .email-header {
-    padding: 20px;
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .header-top h1 {
-    font-size: 1.6em;
-    margin: 0;
-    font-weight: normal;
-  }
-  
-  .sender-info {
-    display: flex;
-    align-items: center;
-  }
-  
-  .sender-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 15px;
-    overflow: hidden; /* Rounded avatar */
-  }
-  
-  .avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    background-color: #999999; /* Grey placeholder for avatar */
-    border-radius: 50%;
-  }
-  
-  
-  .sender-details {
-    flex-grow: 1;
-  }
-  
-  .sender-name {
-    font-weight: bold;
-    font-size: 1em;
-  }
-  
-  .sender-email {
-    font-size: 0.9em;
-    color: #777;
-  }
-  
-  .email-date {
-    font-size: 0.85em;
-    color: #777;
-    white-space: nowrap;
-  }
-  
-  
-  .email-body-area {
-    padding: 20px;
-  }
-  
-  .email-content {
-    line-height: 1.2;
-    font-size: 1em;
-    white-space: pre-line;
-  }
-  
-  .email-content p {
-    margin-bottom: 12px;
-    text-align: left;
-  }
-  
-  .email-content a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .email-content a:hover {
-    text-decoration: underline;
-  }
+/* Contenedor principal estilo cliente Gmail */
+.gmail-client-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  color: #202124;
+  font-family: 'Google Sans', Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e2e7;
+  position: relative;
+  min-height: 480px;
+}
 
-  .email-image {
-    max-width: 700px;
-    max-height: 250px;
-    height: auto;
-    width: auto;
-    display: block;
-    margin: 0 auto;
-  }
+.gmail-loading-state {
+  color: #fff;
+  padding: 40px;
+  text-align: center;
+}
 
-  .email-avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-  }
+/* 1. Barra de herramientas */
+.gmail-toolbar {
+  background: #ffffff;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f3f4;
+}
 
-  .email-link {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: auto; 
-    flex-direction: column;
-  }
+.gmail-toolbar-left,
+.gmail-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gmail-toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background-color: #dadce0;
+  margin: 0 8px;
+}
+
+.gmail-icon-btn {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5f6368;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.gmail-icon-btn:hover {
+  background-color: #f1f3f4;
+  color: #202124;
+}
+
+.gmail-page-indicator {
+  font-size: 0.75rem;
+  color: #5f6368;
+  margin-right: 8px;
+}
+
+/* 2. Asunto */
+.gmail-subject-container {
+  padding: 16px 24px 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gmail-subject-text {
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: #1f1f1f;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.gmail-tag-badge {
+  background-color: #e8eaed;
+  color: #444746;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* 3. Encabezado del remitente */
+.gmail-sender-row {
+  padding: 12px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.gmail-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.gmail-sender-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.gmail-sender-line {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.gmail-sender-name {
+  font-weight: 700;
+  color: #202124;
+  font-size: 0.95rem;
+}
+
+.gmail-sender-email {
+  font-size: 0.8rem;
+  color: #5f6368;
+}
+
+.gmail-to-me-container {
+  margin-top: 2px;
+}
+
+.gmail-to-me-btn {
+  font-size: 0.8rem;
+  color: #5f6368;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.gmail-to-me-btn:hover {
+  background-color: #f1f3f4;
+}
+
+.gmail-arrow-down {
+  font-size: 0.7rem;
+}
+
+.gmail-security-pill-dropdown {
+  margin-top: 8px;
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 0.8rem;
+  color: #3c4043;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gmail-header-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gmail-date-text {
+  font-size: 0.75rem;
+  color: #5f6368;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.star-btn {
+  font-size: 1.2rem;
+  color: #5f6368;
+}
+
+.star-btn.starred {
+  color: #fbbc04;
+}
+
+/* 4. Cuerpo del mensaje */
+.gmail-body-container {
+  padding: 16px 24px 32px 24px;
+  font-size: 0.95rem;
+  color: #202124;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.gmail-body-text {
+  white-space: pre-line;
+  margin-bottom: 24px;
+}
+
+.gmail-action-block {
+  margin-top: 20px;
+}
+
+/* Botón Material Design estilo Google Workspace */
+.gmail-material-btn {
+  background-color: #1a73e8;
+  color: #ffffff !important;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 10px 24px;
+  border-radius: 4px;
+  display: inline-block;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gmail-material-btn:hover {
+  background-color: #174ea6;
+  box-shadow: 0 2px 4px rgba(60, 64, 67, 0.3), 0 3px 6px 2px rgba(60, 64, 67, 0.15);
+}
+
+/* 5. Tooltip de inspección de URL estilo Google Chrome (esquina inferior izquierda) */
+.chrome-url-tooltip-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #f1f3f4;
+  border-top: 1px solid #dadce0;
+  border-right: 1px solid #dadce0;
+  border-top-right-radius: 6px;
+  padding: 3px 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+  font-size: 11px;
+  color: #3c4043;
+  max-width: 85%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 2px -2px 6px rgba(0, 0, 0, 0.08);
+}

@@ -1,177 +1,116 @@
-.service {
-    width: 600px;
-    background-color: #292929;
-    color: white;
-    margin: 10px;
-    border-radius: 8px;
-    overflow: hidden;
-    font-family: sans-serif;
-    height: fit-content;
+.service-card {
+  width: 640px;
+  max-width: 92vw;
+  background-color: #242424;
+  color: white;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #383838;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
 }
 
-.service-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-    cursor: pointer;
-    background-color: #292929;
+.service-card:hover {
+  border-color: #555555;
 }
 
-.service-name {
-    font-size: 24px;
+.service-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  cursor: pointer;
+  background-color: #242424;
 }
 
-.expand-toggle {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
+.service-left-area {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.service-actions {
-    padding: 12px;
-    display: flex;
-    gap: 10px;
-    background-color: #111;
-    transition: opacity 0.2s ease;
-    justify-content: center;
-    align-items: center;
+.service-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #333333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
 }
 
-.generate-button {
-    padding: 15px 40px;
-    border: none;
-    border-radius: 25px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background-color: #d9232d;
-    color: white;
+.service-title-text {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #ffffff;
 }
 
-.generate-button:hover,
-.delete-button:hover,
-.close-button:hover {
-    background-color: #b31b23;
+.service-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.see-button {
-    padding: 15px 40px;
-    border: none;
-    border-radius: 25px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background-color: #ffffff;
-    color: #000000;
+.quick-icon-btn {
+  background: #333333;
+  border: none;
+  color: #fff;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.see-button:hover,
-.copy-button:hover {
-    background-color: #aaaaaa !important;
+.quick-icon-btn.copy:hover {
+  background: #2563eb;
 }
 
-.delete-button {
-    width: 50px;
-    height: 50px;
-    margin-left: 40px;
-    border: none;
-    border-radius: 50%;
-    background-color: #d9232d;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+.quick-icon-btn.delete:hover {
+  background: #d9232d;
 }
 
-.icon {
-    width: 25px;
-    height: 25px;
-    margin-right: 20px;
+.expand-indicator {
+  color: #888;
+  font-size: 0.85rem;
+  margin-left: 6px;
 }
 
-.service-logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #00bcd4;
-    margin-right: 15px;   
+.service-expanded-drawer {
+  padding: 16px 20px;
+  background-color: #181818;
+  border-top: 1px solid #333333;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
 }
 
-.logo {
-    border: none;
-    border-radius: 100%;
+.drawer-btn {
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
 }
 
-.modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+.drawer-btn.regenerate {
+  background-color: #d9232d;
+  color: white;
+}
+.drawer-btn.regenerate:hover {
+  background-color: #b31b23;
 }
 
-.modal {
-    position: relative; /* Needed for absolute X button */
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    border-radius: 12px;
-    background-color: #1e1e1e;
-    padding: 20px;
-    width: 400px;
-    max-width: 90%;
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0.8);
-    text-align: center;
+.drawer-btn.see {
+  background-color: #ffffff;
+  color: #000000;
 }
-
-.copy-button {
-    border: none;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-    background-color: #ffffff;
-}
-
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    background-color: #d9232d;
-    color: white;
-}
-
-.modal-text {
-    background-color: #ffffff;
-    border-radius: 6px;
-    width: 50%;
-    height: fit-content;
-}
-
-.modal-password {
-
-    font-size: 20px;
-    font-weight: bold;
-    color: #292929;
+.drawer-btn.see:hover {
+  background-color: #cccccc;
 }

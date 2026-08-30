@@ -1,126 +1,137 @@
-/* Global Styles */
-body,
-html {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    width: 100vw;
+.home-page-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
 }
 
-#root {
-    width: 100%;
-    min-height: 100vh;
+.home-scroll-container {
+  flex-grow: 1;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-.page {
-    display: flex;
-    flex-direction: row;
-    min-height: 100vh;
-    height: auto;
+.hero-banner-section {
+  background: linear-gradient(180deg, #d9232d 0%, #8f0d14 100%);
+  color: white;
+  padding: 60px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.content-area {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
+.hero-main-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin: 0 0 16px 0;
 }
 
-.welcome-section {
-    background-color: #d9232d;
-    color: white;
-    padding-top: 10px;
-    text-align: center;
-    padding-bottom: 20px;
+.hero-lead-text {
+  font-size: 1.2rem;
+  max-width: 680px;
+  margin: 0 0 28px 0;
+  line-height: 1.6;
+  opacity: 0.95;
 }
 
-.welcome-title {
-    font-size: 2em;
-    margin-bottom: 20px;
+.hero-cta-btn {
+  background-color: #ffffff;
+  color: #d9232d;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.welcome-description {
-    font-size: 1.1em;
-    margin-bottom: 20px;
-    line-height: 1.6;
+.hero-cta-btn:hover {
+  transform: translateY(-2px);
+  background-color: #f0f0f0;
 }
 
-.start-test-button {
-    background-color: white;
-    color: #d9232d;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.interactive-features-scroll-wrapper {
+  background-color: #0b0b0d;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.start-test-button:hover {
-    background-color: #aaaaaa;
+.section-headline {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 40px 0;
+  text-align: center;
 }
 
-.what-is-trainsme-section {
-    background-color: #1e1e1e;
-    color: white;
-    padding: 10px;
-    text-align: center;
+.features-interactive-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 800px;
+  width: 100%;
 }
 
-.what-is-trainsme-title {
-    font-size: 2em;
-    margin-bottom: 30px;
-    text-align: center;
+.feature-interactive-card {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-.what-is-trainsme-text {
-    font-size: 1em;
-    line-height: 1.6;
-    text-align: left;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+.feature-interactive-card:hover {
+  transform: translateY(-4px);
+  border-color: #d9232d;
 }
 
-.footer-section {
-    background-color: #d9232d;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    font-size: 0.9em;
+.feature-icon-container {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: #27272a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d9232d;
+  flex-shrink: 0;
 }
 
-.main-features-section {
-    background-color: #09090b;
-    color: white;
-    padding: 10px;
-    text-align: left;
-    padding-bottom: 30px;
+.feature-text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.main-features-title {
-    font-size: 2em;
-    margin-bottom: 20px;
-    text-align: center;
+.feature-heading {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
 }
 
-.card-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+.feature-description {
+  font-size: 0.95rem;
+  color: #a1a1aa;
+  line-height: 1.6;
+  margin: 0;
 }
 
-.card-title {
-    font-size: 18px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.card-description {
-    font-size: 1em;
-    line-height: 1.4;
-    color: #dddddd;
+.home-footer {
+  background: #09090b;
+  border-top: 1px solid #27272a;
+  color: #71717a;
+  padding: 24px;
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: auto;
 }

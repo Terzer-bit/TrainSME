@@ -1,125 +1,86 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Menu.css';
-import { useNavigate, useLocation } from 'react-router-dom';
-import pfp from '../assets/blank-profile.svg';
-import logoutIcon from '../assets/log-out-neg.svg';
-import metricsIcon from '../assets/list-neg.svg';
-import passwordManagaerIcon from '../assets/book-lock-neg.svg';
-import phishingTestIcon from '../assets/circle-plus-neg.svg';
-import enterpriseIcon from '../assets/chart-neg.svg';
 
+export default function Menu({ activeItem, onNavigate, user }) {
+  const initials = user?.username ? user.username.substring(0, 2).toUpperCase() : 'US';
 
-function Menu() {
-    const [activeItem, setActiveItem] = useState(null); // keep track of the items
-    const navigate = useNavigate();
-    const location = useLocation(); // use location to detect how the state should change
-    const [userInfo, setUserInfo] = useState({
-        user_id: '',
-        username: '',
-        email: '',
-        admin: ''
-      });
-
-    useEffect(() => {
-        const user_id = localStorage.getItem('user_id');
-        const username = localStorage.getItem('username');
-        const email = localStorage.getItem('email');
-        const admin = localStorage.getItem('admin');
-        if (username && email) {
-          setUserInfo({ user_id, username, email, admin });
-        }
-      }, []);
-      
-
-    const handleItemClick = (itemName) => {
-        setActiveItem(itemName);
-
-        if (itemName === 'Phishing simulator') {
-            navigate('/home');
-        } else if (itemName === 'Password manager') {
-            navigate('/password-manager');
-        } else if (itemName === 'My results') {
-            navigate('/metrics');
-        } else if (itemName === 'Enterprise metrics') {
-            navigate('/enterprise-metrics');
-        } else if (itemName === 'Sign Out') {
-            // Handle sign out logic here (e.g., clear token, redirect to login)
-            console.log('Sign Out clicked');
-            navigate('/login');
-        }
-    };
-
-    // Determine active item based on path
-    useEffect(() => {
-        const path = location.pathname;
-        if (path.includes('phishing-test') || path.includes('home')) {
-            setActiveItem('Phishing simulator');
-        } else if (path.includes('password-manager')) {
-            setActiveItem('Password manager');
-        } else if (path.includes('enterprise-metrics')){
-            setActiveItem('Enterprise metrics');
-        } else if (path.includes('metrics')) {
-            setActiveItem('My results');
-        } else {
-            setActiveItem('Phishing simulator'); // Or set a default active item if needed
-        }
-    }, [location.pathname]);
-
-
-    return (
-        <div className="menu">
-            <div className="user-profile">
-                <div className="user-avatar">
-                    <img src={pfp} alt="Profile picture" className="logo" />
-                </div>
-                <div className="user-info">
-                    <div className="username">{userInfo.username}</div>
-                    <div className="email">{userInfo.email}</div>
-                </div>
-            </div>
-
-            <ul className="menu-items">
-                <li
-                    className={`menu-item ${activeItem === 'Phishing simulator' ? 'active' : ''}`}
-                    onClick={() => handleItemClick('Phishing simulator')}
-                >
-                    <img src={phishingTestIcon} alt="Phishing simulator icon" className="icon" />
-                    Phishing simulator
-                </li>
-                <li
-                    className={`menu-item ${activeItem === 'Password manager' ? 'active' : ''}`}
-                    onClick={() => handleItemClick('Password manager')}
-                >
-                    <img src={passwordManagaerIcon} alt="Password manager icon" className="icon" />
-                    Password manager
-                </li>
-                <li
-                    className={`menu-item ${activeItem === 'My results' ? 'active' : ''}`}
-                    onClick={() => handleItemClick('My results')}
-                >
-                    <img src={metricsIcon} alt="Metrics icon" className="icon" />
-                    My results
-                </li>
-
-                {userInfo.admin === 'true' && (
-                    <li
-                        className={`menu-item ${activeItem === 'Enterprise metrics' ? 'active' : ''}`}
-                        onClick={() => handleItemClick('Enterprise metrics')}
-                    >
-                        <img src={enterpriseIcon} alt="Enterprise metrics icon" className="icon" />
-                        Enterprise metrics
-                    </li>
-                )}
-            </ul>
-
-
-            <button className="sign-out-button" onClick={() => handleItemClick('Sign Out')}>
-                <span>Sign Out</span> <span><img src={logoutIcon} alt="Log out icon" className="log-out-icon" /></span>
-            </button>
-
-
+  return (
+    <aside className="menu">
+      <div className="user-profile">
+        <div className="user-avatar-circle">{initials}</div>
+        <div className="user-info">
+          <div className="username">{user?.username}</div>
+          <span className="user-badge">{user?.admin ? 'Admin' : 'Employee'} • {user?.enterprise}</span>
         </div>
-    );
-}
+      </div>
 
-export default Menu;
+      <ul className="menu-items">
+        <li
+          className={`menu-item ${activeItem === 'home' || activeItem === 'phishing-test' ? 'active' : ''}`}
+          onClick={() => onNavigate('home')}
+        >
+          <span className="menu-item-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </span>
+          Phishing simulator
+        </li>
+
+        <li
+          className={`menu-item ${activeItem === 'password-manager' ? 'active' : ''}`}
+          onClick={() => onNavigate('password-manager')}
+        >
+          <span className="menu-item-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </span>
+          Password manager
+        </li>
+
+        <li
+          className={`menu-item ${activeItem === 'my-results' ? 'active' : ''}`}
+          onClick={() => onNavigate('my-results')}
+        >
+          <span className="menu-item-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </span>
+          My results
+        </li>
+
+        {user?.admin && (
+          <li
+            className={`menu-item ${activeItem === 'metrics' ? 'active' : ''}`}
+            onClick={() => onNavigate('metrics')}
+          >
+            <span className="menu-item-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
+            </span>
+            Metrics
+          </li>
+        )}
+      </ul>
+
+      <button className="sign-out-button" onClick={() => onNavigate('signout')}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Sign Out
+      </button>
+    </aside>
+  );
+}
