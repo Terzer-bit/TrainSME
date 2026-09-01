@@ -28,7 +28,8 @@
   border: 1px solid #27272a;
   background: #18181b;
   color: #fff;
-  width: 320px;
+  width: 360px;
+  max-width: 100%;
 }
 
 .employee-sort-select {
@@ -38,4 +39,52 @@
   background: #18181b;
   color: #fff;
   cursor: pointer;
+}
+
+.username-subtext {
+  display: block;
+  font-size: 0.75rem;
+  color: #71717a;
+  font-weight: normal;
+}
+
+/* Grupo de botones de acción en la tabla */
+.table-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn-edit {
+  background-color: #27272a;
+  color: #ffffff;
+  border: 1px solid #3f3f46;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn-edit:hover {
+  background-color: #3f3f46;
+  border-color: #71717a;
+}
+
+.action-btn-view {
+  background-color: transparent;
+  color: #d9232d;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn-view:hover {
+  background-color: rgba(217, 35, 45, 0.15);
+  border-color: #d9232d;
 }

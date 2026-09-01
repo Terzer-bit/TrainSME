@@ -2,7 +2,6 @@ const express = require('express');
 const pool = require('../db/db');
 const router = express.Router();
 
-// Métricas de empresa para administradores
 router.get('/api/enterprise/metrics', async (req, res) => {
   const { enterprise } = req.query;
 
@@ -11,10 +10,12 @@ router.get('/api/enterprise/metrics', async (req, res) => {
   }
 
   try {
-    const usersQuery = `
+    const query = `
       SELECT 
         u.user_id, 
         u.username, 
+        u.first_name,
+        u.last_name,
         u.email, 
         u.enterprise, 
         u.admin,
@@ -24,11 +25,11 @@ router.get('/api/enterprise/metrics', async (req, res) => {
       FROM users u
       LEFT JOIN tests t ON u.user_id = t.user_id
       WHERE u.enterprise = $1
-      GROUP BY u.user_id
+      GROUP BY u.user_id, u.username, u.first_name, u.last_name, u.email, u.enterprise, u.admin
       ORDER BY avg_score DESC;
     `;
 
-    const result = await pool.query(usersQuery, [enterprise]);
+    const result = await pool.query(query, [enterprise]);
     res.json({ employees: result.rows });
   } catch (err) {
     console.error('Error fetching enterprise metrics:', err);

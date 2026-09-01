@@ -14,12 +14,33 @@
 }
 
 .user-profile {
-  padding: 12px 8px 20px 8px;
-  margin-bottom: 24px;
+  padding: 10px 10px 16px 10px;
+  margin-bottom: 20px;
   border-bottom: 1px solid #333333;
   display: flex;
   align-items: center;
   gap: 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.user-profile.interactive-profile {
+  cursor: pointer;
+}
+
+.user-profile.interactive-profile:hover {
+  background-color: #262626;
+}
+
+.profile-open-indicator {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.user-profile.interactive-profile:hover .profile-open-indicator {
+  opacity: 1;
+  transform: rotate(45deg);
 }
 
 .user-avatar-circle {
@@ -31,9 +52,10 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1.15em;
   color: #fff;
   border: 2px solid #ffffff22;
+  flex-shrink: 0;
 }
 
 .user-info {
@@ -43,7 +65,7 @@
 
 .username {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #ffffff;
   white-space: nowrap;
   text-overflow: ellipsis;

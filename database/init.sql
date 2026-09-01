@@ -3,6 +3,8 @@ CREATE TABLE IF NOT EXISTS users (
   username VARCHAR(50) NOT NULL UNIQUE,
   email VARCHAR(100) NOT NULL UNIQUE,
   hashed_password VARCHAR(255) NOT NULL,
+  first_name VARCHAR(50) NOT NULL DEFAULT '',
+  last_name VARCHAR(50) NOT NULL DEFAULT '',
   enterprise VARCHAR(50) NOT NULL,
   admin BOOLEAN NOT NULL DEFAULT false
 );
@@ -30,12 +32,13 @@ CREATE TABLE IF NOT EXISTS services (
 );
 
 -- Hashes bcrypt válidos de '1234asdf'
-INSERT INTO users (username, email, hashed_password, enterprise, admin) VALUES
-('admin', 'admin@example.com', '$2a$12$v1yAc3TKrHZU.QMxH0MKB.HXwvjrLZN/5XcFO4jDEIAXDInCBfXke', 'Cookies.SA', true),
-('analopez', 'ana@example.com', '$2a$12$.F0AaKAcaf.h03cYZybft.4nHNsPuf0o3pO./x6vI4kZYjJvAOni.', 'Cookies.SA', false)
-ON CONFLICT (username) DO NOTHING;
+INSERT INTO users (username, email, hashed_password, first_name, last_name, enterprise, admin) VALUES
+('admin', 'admin@example.com', '$2a$12$v1yAc3TKrHZU.QMxH0MKB.HXwvjrLZN/5XcFO4jDEIAXDInCBfXke', 'Administrator', 'System', 'Cookies.SA', true),
+('analopez', 'ana@example.com', '$2a$12$.F0AaKAcaf.h03cYZybft.4nHNsPuf0o3pO./x6vI4kZYjJvAOni.', 'Ana', 'López', 'Cookies.SA', false)
 
--- Tests iniciales con desglose JSONB
+ON CONFLICT (username) DO UPDATE 
+SET first_name = EXCLUDED.first_name, last_name = EXCLUDED.last_name;
+
 INSERT INTO tests (user_id, correct_answers, total_questions, test_date, details) VALUES
 (2, 9, 10, NOW() - INTERVAL '2 days', '[
   {"id":1, "subject":"Security Alert", "userAnswer":"Phishing", "solution":"Phishing", "isCorrect":true, "explanation":"Spoofed sender domain."},

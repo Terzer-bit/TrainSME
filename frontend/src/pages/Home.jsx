@@ -11,11 +11,20 @@ export default function Home({ user, onNavigate }) {
         <section className="hero-banner-section">
           <h1 className="hero-main-title">Welcome to TrainSME</h1>
           <p className="hero-lead-text">
-            Strengthen your cybersecurity reflexes against advanced social engineering attacks while maintaining your credentials securely vaulted with AES-256-GCM encryption.
+            Strengthen your cybersecurity reflexes against advanced social engineering attacks, inspect suspicious attachments for hidden malware, and maintain credentials vaulted with AES-256-GCM encryption.
           </p>
-          <button className="hero-cta-btn" onClick={() => onNavigate('phishing-test')}>
-            Start a new phishing test
-          </button>
+          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button className="hero-cta-btn" onClick={() => onNavigate('phishing-test')}>
+              Start a new phishing test
+            </button>
+            <button
+              className="hero-cta-btn"
+              style={{ backgroundColor: '#18181b', color: '#fff', border: '1px solid #3f3f46' }}
+              onClick={() => onNavigate('analyze-file')}
+            >
+              Inspect a suspicious file →
+            </button>
+          </div>
         </section>
 
         <section className="interactive-features-scroll-wrapper">
@@ -34,12 +43,30 @@ export default function Home({ user, onNavigate }) {
               <div className="feature-text-block">
                 <h3 className="feature-heading">Dynamic Phishing Simulator</h3>
                 <p className="feature-description">
-                  Experience realistic corporate attack scenarios, including domain spoofing, typosquatting, credential harvesting, and urgent payment requests with immediate pedagogical feedback.
+                  Experience authentic Gmail-style corporate attack scenarios, including domain spoofing, typosquatting, credential harvesting, and urgent invoice fraud with immediate pedagogical feedback.
                 </p>
               </div>
             </div>
 
-            {/* Feature 2: Password Manager */}
+            {/* Feature 2: File Inspector */}
+            <div className="feature-interactive-card">
+              <div className="feature-icon-container">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <circle cx="11.5" cy="14.5" r="2.5"/>
+                  <path d="M13.5 16.5L16 19"/>
+                </svg>
+              </div>
+              <div className="feature-text-block">
+                <h3 className="feature-heading">Static File & Malware Inspector</h3>
+                <p className="feature-description">
+                  Safely upload and evaluate suspicious email attachments. Features true MIME verification, Shannon entropy calculation for packed payloads, and VBA macro/PDF exploit pattern detection.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 3: Password Manager */}
             <div className="feature-interactive-card">
               <div className="feature-icon-container">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -51,12 +78,12 @@ export default function Home({ user, onNavigate }) {
               <div className="feature-text-block">
                 <h3 className="feature-heading">AES-256-GCM Zero-Knowledge Vault</h3>
                 <p className="feature-description">
-                  Generate high-entropy passwords with custom length controls. Every secret is authenticated and encrypted on-the-fly with derived keys without storing plaintexts on the database.
+                  Generate high-entropy passwords with custom length controls. Every secret is authenticated and encrypted on-the-fly with derived keys without storing plaintexts in the database.
                 </p>
               </div>
             </div>
 
-            {/* Feature 3: Actionable Metrics */}
+            {/* Feature 4: Actionable Metrics */}
             <div className="feature-interactive-card">
               <div className="feature-icon-container">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

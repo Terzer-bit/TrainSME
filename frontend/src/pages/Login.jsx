@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Login.css';
 import logo from '../assets/Logo4-removebg.svg';
 
-export default function Login({ onLoginSuccess }) {
+export default function Login({ onLoginSuccess, onNavigateToRegister }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -22,13 +22,6 @@ export default function Login({ onLoginSuccess }) {
 
       const data = await res.json();
       if (res.ok) {
-        localStorage.setItem('user_id', data.user_id);
-        localStorage.setItem('username', data.username);
-        localStorage.setItem('email', data.email);
-        localStorage.setItem('password', data.password);
-        localStorage.setItem('enterprise', data.enterprise);
-        localStorage.setItem('admin', data.admin);
-
         onLoginSuccess(data);
       } else {
         setErrorMsg(data.error || 'Authentication error');
@@ -44,7 +37,6 @@ export default function Login({ onLoginSuccess }) {
   return (
     <div className="login-page-container">
       <div className="login-card-box">
-        {/* Logo como título principal */}
         <div className="login-logo-container">
           <img src={logo} alt="TrainSME Logo" className="login-brand-logo" />
         </div>
@@ -54,7 +46,7 @@ export default function Login({ onLoginSuccess }) {
         <form onSubmit={handleSubmit} className="login-form-element">
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Username or Email"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
@@ -75,6 +67,13 @@ export default function Login({ onLoginSuccess }) {
         </form>
 
         {errorMsg && <div className="login-error-msg">{errorMsg}</div>}
+
+        <div className="auth-switch-box">
+          <span>Don't have an account? </span>
+          <button className="auth-link-btn" onClick={onNavigateToRegister}>
+            Sign up
+          </button>
+        </div>
       </div>
     </div>
   );
