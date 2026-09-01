@@ -9,7 +9,7 @@ import './Metrics.css';
 export default function Metrics({ user, onNavigate }) {
   const [employees, setEmployees] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState('desc'); // 'desc' | 'asc'
+  const [sortOrder, setSortOrder] = useState('name-asc'); // 'name-asc' | 'name-desc' | 'score-desc' | 'score-asc'
   const [inspectedUserId, setInspectedUserId] = useState(null);
   const [editingEmployee, setEditingEmployee] = useState(null);
 
@@ -104,6 +104,7 @@ export default function Metrics({ user, onNavigate }) {
     );
   }
 
+  // Filtrado y ordenación con soporte A-Z, Z-A y puntuación
   const filteredEmployees = employees
     .filter((emp) => {
       const fullName = `${emp.last_name || ''} ${emp.first_name || ''}`.toLowerCase();
@@ -113,7 +114,19 @@ export default function Metrics({ user, onNavigate }) {
       return fullName.includes(query) || username.includes(query) || email.includes(query);
     })
     .sort((a, b) => {
-      return sortOrder === 'desc' ? b.avg_score - a.avg_score : a.avg_score - b.avg_score;
+      const nameA = (a.last_name && a.first_name ? `${a.last_name}, ${a.first_name}` : a.username || '').toLowerCase();
+      const nameB = (b.last_name && b.first_name ? `${b.last_name}, ${b.first_name}` : b.username || '').toLowerCase();
+
+      if (sortOrder === 'name-asc') {
+        return nameA.localeCompare(nameB);
+      } else if (sortOrder === 'name-desc') {
+        return nameB.localeCompare(nameA);
+      } else if (sortOrder === 'score-desc') {
+        return b.avg_score - a.avg_score;
+      } else if (sortOrder === 'score-asc') {
+        return a.avg_score - b.avg_score;
+      }
+      return 0;
     });
 
   return (
@@ -140,8 +153,10 @@ export default function Metrics({ user, onNavigate }) {
             onChange={(e) => setSortOrder(e.target.value)}
             className="employee-sort-select"
           >
-            <option value="desc">Sort: Highest Average Score First</option>
-            <option value="asc">Sort: Lowest Average Score First</option>
+            <option value="name-asc">Sort: Employee Name (A → Z)</option>
+            <option value="name-desc">Sort: Employee Name (Z → A)</option>
+            <option value="score-desc">Sort: Highest Average Score First</option>
+            <option value="score-asc">Sort: Lowest Average Score First</option>
           </select>
         </div>
 
