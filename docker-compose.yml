@@ -6,16 +6,16 @@ services:
     container_name: trainsme_postgres
     restart: always
     environment:
-      POSTGRES_USER: pablo
-      POSTGRES_PASSWORD: 1234asdf
-      POSTGRES_DB: trainSME_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:${DB_PORT}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pablo -d trainSME_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -25,10 +25,10 @@ services:
     container_name: trainsme_backend
     restart: always
     ports:
-      - "5000:5000"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     environment:
-      - PORT=5000
-      - DATABASE_URL=postgresql://pablo:1234asdf@postgres:5432/trainSME_db
+      - PORT=${BACKEND_PORT}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${DB_PORT}/${POSTGRES_DB}
     depends_on:
       postgres:
         condition: service_healthy

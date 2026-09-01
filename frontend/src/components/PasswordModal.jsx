@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PasswordModal.css';
 
 export default function PasswordModal({
@@ -8,9 +8,18 @@ export default function PasswordModal({
   onClose,
   onConfirm
 }) {
-  const [serviceName, setServiceName] = useState(initialService);
+  const [serviceName, setServiceName] = useState(mode === 'create' ? '' : initialService);
   const [passwordValue, setPasswordValue] = useState('');
   const [length, setLength] = useState(16);
+
+  // Reiniciar estado cada vez que se abre o cambian las props
+  useEffect(() => {
+    if (isOpen) {
+      setServiceName(mode === 'create' ? '' : initialService);
+      setPasswordValue('');
+      setLength(16);
+    }
+  }, [isOpen, mode, initialService]);
 
   if (!isOpen) return null;
 
@@ -48,23 +57,25 @@ export default function PasswordModal({
   };
 
   return (
-    <div className="pwd-modal-overlay">
-      <div className="pwd-modal-card">
+    <div className="pwd-modal-overlay" onClick={onClose}>
+      <div className="pwd-modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="pwd-modal-header">
           <h3 className="pwd-modal-title">
             {mode === 'create' ? 'Add new service password' : `Regenerate password for ${initialService}`}
           </h3>
+          <button className="pwd-modal-close-icon" onClick={onClose}>✕</button>
         </div>
 
         {mode === 'create' && (
           <div className="pwd-input-group">
-            <label className="pwd-label">Service name</label>
+            <label className="pwd-label">Service name *</label>
             <input
               type="text"
-              placeholder="e.g. GitHub, AWS, Internal Portal"
+              placeholder="e.g. GitHub, AWS, Google Cloud"
               value={serviceName}
               onChange={(e) => setServiceName(e.target.value)}
               className="pwd-input-field"
+              autoFocus
             />
           </div>
         )}

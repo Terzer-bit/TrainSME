@@ -44,7 +44,7 @@ router.post('/api/login', async (req, res) => {
   }
 });
 
-// 2. Registro de Usuario (No administrador por defecto)
+// 2. Registro de Usuario (El primer usuario de la empresa se convierte en Admin automáticamente)
 router.post('/api/register', async (req, res) => {
   const { first_name, last_name, username, email, password, enterprise } = req.body;
 
@@ -59,6 +59,7 @@ router.post('/api/register', async (req, res) => {
   const userEnterprise = (enterprise && enterprise.trim()) || 'Cookies.SA';
 
   try {
+    // Comprobar si el username o email ya existen
     const existing = await pool.query(
       'SELECT username, email FROM users WHERE username = $1 OR email = $2',
       [username.trim(), email.trim().toLowerCase()]
@@ -71,11 +72,18 @@ router.post('/api/register', async (req, res) => {
       return res.status(409).json({ error: 'Email is already registered' });
     }
 
+    // Comprobar si ya existe algún administrador en esta empresa
+    const adminCheck = await pool.query(
+      'SELECT COUNT(*)::int AS admin_count FROM users WHERE enterprise = $1 AND admin = true',
+      [userEnterprise]
+    );
+    const isFirstAdmin = adminCheck.rows[0].admin_count === 0;
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const insertQuery = `
       INSERT INTO users (first_name, last_name, username, email, hashed_password, enterprise, admin)
-      VALUES ($1, $2, $3, $4, $5, $6, false)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING user_id, first_name, last_name, username, email, enterprise, admin;
     `;
     const values = [
@@ -84,13 +92,16 @@ router.post('/api/register', async (req, res) => {
       username.trim(),
       email.trim().toLowerCase(),
       hashedPassword,
-      userEnterprise
+      userEnterprise,
+      isFirstAdmin // true si es el primer usuario de la empresa, false en caso contrario
     ];
     const result = await pool.query(insertQuery, values);
 
     const newUser = result.rows[0];
     res.status(201).json({
-      message: 'User registered successfully',
+      message: isFirstAdmin 
+        ? 'User registered as initial enterprise administrator' 
+        : 'User registered successfully',
       user_id: newUser.user_id,
       first_name: newUser.first_name,
       last_name: newUser.last_name,
@@ -106,7 +117,7 @@ router.post('/api/register', async (req, res) => {
   }
 });
 
-// 3. Modificar rol de administrador
+// 3. Modificar rol de administrador rápido
 router.put('/api/users/:user_id/admin', async (req, res) => {
   const { user_id } = req.params;
   const { admin } = req.body;
@@ -116,6 +127,22 @@ router.put('/api/users/:user_id/admin', async (req, res) => {
   }
 
   try {
+    // Si se intenta revocar el rol de admin, comprobar que no sea el único admin de la empresa
+    if (admin === false) {
+      const userRes = await pool.query('SELECT enterprise, admin FROM users WHERE user_id = $1', [user_id]);
+      if (userRes.rows.length > 0 && userRes.rows[0].admin) {
+        const countRes = await pool.query(
+          'SELECT COUNT(*)::int AS count FROM users WHERE enterprise = $1 AND admin = true',
+          [userRes.rows[0].enterprise]
+        );
+        if (countRes.rows[0].count <= 1) {
+          return res.status(400).json({
+            error: 'Cannot revoke administrator role from the only admin in the organization. Appoint another admin first.'
+          });
+        }
+      }
+    }
+
     const updateQuery = `
       UPDATE users
       SET admin = $1
@@ -138,7 +165,7 @@ router.put('/api/users/:user_id/admin', async (req, res) => {
   }
 });
 
-// 4. Modificar información del usuario (Sin campo enterprise)
+// 4. Modificar información del usuario (Edición por Administrador)
 router.put('/api/users/:user_id', async (req, res) => {
   const { user_id } = req.params;
   const { first_name, last_name, username, email, admin } = req.body;
@@ -148,7 +175,23 @@ router.put('/api/users/:user_id', async (req, res) => {
   }
 
   try {
-    // Comprobar si otro usuario ya utiliza ese username o email
+    // Si se desmarca como admin, verificar que no sea el único administrador
+    if (admin === false) {
+      const userRes = await pool.query('SELECT enterprise, admin FROM users WHERE user_id = $1', [user_id]);
+      if (userRes.rows.length > 0 && userRes.rows[0].admin) {
+        const countRes = await pool.query(
+          'SELECT COUNT(*)::int AS count FROM users WHERE enterprise = $1 AND admin = true',
+          [userRes.rows[0].enterprise]
+        );
+        if (countRes.rows[0].count <= 1) {
+          return res.status(400).json({
+            error: 'Appoint another user with administrator privileges before removing this role.'
+          });
+        }
+      }
+    }
+
+    // Comprobar colisiones de username o email con otros usuarios
     const conflict = await pool.query(
       'SELECT user_id, username, email FROM users WHERE (username = $1 OR email = $2) AND user_id != $3',
       [username.trim(), email.trim().toLowerCase(), user_id]
@@ -195,21 +238,42 @@ router.put('/api/users/:user_id', async (req, res) => {
   }
 });
 
-// 5. Eliminar usuario permanentemente
+// 5. Eliminar usuario (Con validación de último administrador)
 router.delete('/api/users/:user_id', async (req, res) => {
   const { user_id } = req.params;
 
   try {
+    const userRes = await pool.query(
+      'SELECT user_id, username, first_name, last_name, enterprise, admin FROM users WHERE user_id = $1',
+      [user_id]
+    );
+
+    if (userRes.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    const targetUser = userRes.rows[0];
+
+    // Si el usuario es administrador, verificar cuántos administradores quedan en la empresa
+    if (targetUser.admin) {
+      const adminCountRes = await pool.query(
+        'SELECT COUNT(*)::int AS count FROM users WHERE enterprise = $1 AND admin = true',
+        [targetUser.enterprise]
+      );
+      if (adminCountRes.rows[0].count <= 1) {
+        return res.status(400).json({
+          error: 'Appoint another user with administrator privileges before deleting.',
+          isLastAdmin: true
+        });
+      }
+    }
+
     const deleteQuery = `
       DELETE FROM users
       WHERE user_id = $1
       RETURNING user_id, username, first_name, last_name;
     `;
     const result = await pool.query(deleteQuery, [user_id]);
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'User not found.' });
-    }
 
     res.json({
       message: 'User deleted successfully',

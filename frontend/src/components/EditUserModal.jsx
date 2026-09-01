@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './EditUserModal.css';
 
-export default function EditUserModal({ isOpen, employee, onClose, onSave, onDelete }) {
+export default function EditUserModal({ isOpen, employee, totalAdminsInEnterprise = 1, onClose, onSave, onDelete }) {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -29,6 +29,9 @@ export default function EditUserModal({ isOpen, employee, onClose, onSave, onDel
   }, [employee]);
 
   if (!isOpen || !employee) return null;
+
+  // Es el único admin si tiene rol admin y el total de admins en la empresa es <= 1
+  const isLastAdmin = Boolean(employee.admin && totalAdminsInEnterprise <= 1);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -61,6 +64,8 @@ export default function EditUserModal({ isOpen, employee, onClose, onSave, onDel
   };
 
   const handleConfirmDelete = async () => {
+    if (isLastAdmin) return;
+
     setDeleting(true);
     try {
       await onDelete(employee.user_id, employee.username);
@@ -189,14 +194,33 @@ export default function EditUserModal({ isOpen, employee, onClose, onSave, onDel
       {showDeleteConfirm && (
         <div className="delete-confirm-overlay" onClick={() => setShowDeleteConfirm(false)}>
           <div className="delete-confirm-card" onClick={(e) => e.stopPropagation()}>
-            <div className="delete-warning-icon">⚠️</div>
-            <h3 className="delete-confirm-title">Delete Employee Account?</h3>
-            <p className="delete-confirm-text">
-              Are you sure you want to permanently delete <strong>{employeeFullName}</strong> (<code>@{employee.username}</code>)?
-            </p>
-            <p className="delete-sub-warning">
-              This action cannot be undone. All test results, metrics, and vaulted passwords associated with this user will be permanently removed.
-            </p>
+            <div className="delete-warning-icon">
+              {isLastAdmin ? '🛡️' : '⚠️'}
+            </div>
+
+            <h3 className="delete-confirm-title">
+              {isLastAdmin ? 'Deletion Blocked' : 'Delete Employee Account?'}
+            </h3>
+
+            {isLastAdmin ? (
+              <div className="delete-blocked-banner">
+                <p className="delete-blocked-message">
+                  Appoint another user with administrator privileges before deleting.
+                </p>
+                <p className="delete-sub-warning">
+                  This user is the only administrator in <strong>{employee.enterprise || 'this organization'}</strong>. An organization must have at least one active administrator.
+                </p>
+              </div>
+            ) : (
+              <>
+                <p className="delete-confirm-text">
+                  Are you sure you want to permanently delete <strong>{employeeFullName}</strong> (<code>@{employee.username}</code>)?
+                </p>
+                <p className="delete-sub-warning">
+                  This action cannot be undone. All test results, metrics, and vaulted passwords associated with this user will be permanently removed.
+                </p>
+              </>
+            )}
 
             <div className="delete-confirm-actions">
               <button
@@ -205,13 +229,14 @@ export default function EditUserModal({ isOpen, employee, onClose, onSave, onDel
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={deleting}
               >
-                Cancel
+                {isLastAdmin ? 'Close' : 'Cancel'}
               </button>
+
               <button
                 type="button"
-                className="btn-confirm-delete"
+                className={`btn-confirm-delete ${isLastAdmin ? 'btn-delete-disabled' : ''}`}
                 onClick={handleConfirmDelete}
-                disabled={deleting}
+                disabled={isLastAdmin || deleting}
               >
                 {deleting ? 'Deleting...' : 'Yes, Delete Employee'}
               </button>

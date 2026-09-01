@@ -26,6 +26,9 @@ export default function Metrics({ user, onNavigate }) {
     fetchEmployees();
   }, [user]);
 
+  // Total de administradores actuales en la organización
+  const totalAdminsInEnterprise = employees.filter((e) => e.admin).length;
+
   // Guardar edición del usuario desde el modal
   const handleSaveUser = async (updatedData) => {
     try {
@@ -66,8 +69,8 @@ export default function Metrics({ user, onNavigate }) {
 
   // Eliminar usuario permanentemente
   const handleDeleteUser = async (targetUserId, empUsername) => {
-    if (targetUserId === user.user_id) {
-      toast.error("You cannot delete your own active administrator account.");
+    if (targetUserId === user.user_id && totalAdminsInEnterprise <= 1) {
+      toast.error("Appoint another user with administrator privileges before deleting.");
       return;
     }
 
@@ -186,7 +189,9 @@ export default function Metrics({ user, onNavigate }) {
                   >
                     <td style={{ fontWeight: 'bold' }}>
                       {formattedName}
-                      <span className="username-subtext">@{emp.username}</span>
+                      <span className="username-subtext">
+                        @{emp.username} {emp.admin && <span style={{ color: '#f87171', fontSize: '0.75rem' }}>(Admin)</span>}
+                      </span>
                     </td>
                     <td style={{ color: '#a1a1aa' }}>{emp.email}</td>
                     <td>{emp.total_tests}</td>
@@ -238,6 +243,7 @@ export default function Metrics({ user, onNavigate }) {
         <EditUserModal
           isOpen={!!editingEmployee}
           employee={editingEmployee}
+          totalAdminsInEnterprise={totalAdminsInEnterprise}
           onClose={() => setEditingEmployee(null)}
           onSave={handleSaveUser}
           onDelete={handleDeleteUser}

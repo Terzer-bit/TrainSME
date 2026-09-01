@@ -10,6 +10,10 @@ export default function PasswordManager({ user, onNavigate }) {
   const [services, setServices] = useState([]);
   const [modalConfig, setModalConfig] = useState({ isOpen: false, mode: 'create', service: '' });
   const [revealedModal, setRevealedModal] = useState({ isOpen: false, text: '', service: '' });
+  
+  // Estado para el modal de confirmación de eliminación
+  const [deletingService, setDeletingService] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchServices = async () => {
     try {
@@ -83,23 +87,36 @@ export default function PasswordManager({ user, onNavigate }) {
     }
   };
 
-  // Eliminar servicio
-  const handleDelete = async (serviceName) => {
-    if (!window.confirm(`Delete password entry for ${serviceName}?`)) return;
+  // Confirmar eliminación del servicio y refrescar la lista de inmediato
+  const handleConfirmDeleteService = async () => {
+    if (!deletingService) return;
+    setIsDeleting(true);
 
     try {
       const res = await fetch('http://localhost:5000/api/password-manager/delete', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ service: serviceName, user_id: user.user_id })
+        body: JSON.stringify({
+          service: deletingService,
+          user_id: user.user_id
+        })
       });
 
       if (res.ok) {
-        toast.info(`Deleted ${serviceName}`);
-        fetchServices();
+        // Actualización reactiva instantánea en la interfaz
+        setServices((prev) => prev.filter((s) => s.service_name !== deletingService));
+        toast.info(`Deleted password entry for ${deletingService}`);
+        setDeletingService(null);
+        fetchServices(); // Sincronización en segundo plano
+      } else {
+        const data = await res.json();
+        toast.error(data.error || 'Failed to delete service');
       }
     } catch (err) {
       console.error(err);
+      toast.error('Server error deleting service');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -144,8 +161,13 @@ export default function PasswordManager({ user, onNavigate }) {
       <Menu activeItem="password-manager" onNavigate={onNavigate} user={user} />
 
       <main className="vault-content-area">
-        <h1 className="vault-header-title">AES-256-GCM Password Manager</h1>
-        <p className="vault-header-desc">Zero-knowledge encrypted corporate credential storage</p>
+        {/* Cabecera alineada a la izquierda con separador */}
+        <div className="vault-section-header">
+          <h1 className="vault-header-title">AES-256-GCM Password Manager</h1>
+          <p className="vault-header-desc">
+            Zero-knowledge encrypted corporate credential storage
+          </p>
+        </div>
 
         <div className="vault-actions-toolbar">
           <button
@@ -164,26 +186,32 @@ export default function PasswordManager({ user, onNavigate }) {
               onCopy={handleQuickCopy}
               onSee={handleSee}
               onRegenerate={(srv) => setModalConfig({ isOpen: true, mode: 'update', service: srv })}
-              onDelete={handleDelete}
+              onDelete={(srvName) => setDeletingService(srvName)}
             />
           ))}
           {services.length === 0 && (
-            <p style={{ color: '#666', marginTop: '40px' }}>No passwords stored yet. Click '+ Add New Account' above.</p>
+            <p style={{ color: '#666', marginTop: '40px' }}>
+              No passwords stored yet. Click '+ Add New Account' above.
+            </p>
           )}
         </div>
 
-        <PasswordModal
-          isOpen={modalConfig.isOpen}
-          mode={modalConfig.mode}
-          initialService={modalConfig.service}
-          onClose={() => setModalConfig({ isOpen: false, mode: 'create', service: '' })}
-          onConfirm={handleModalConfirm}
-        />
+        {/* Modal de añadir / regenerar con clave dinámica para forzar reinicio */}
+        {modalConfig.isOpen && (
+          <PasswordModal
+            key={`${modalConfig.mode}-${modalConfig.service}-${Date.now()}`}
+            isOpen={modalConfig.isOpen}
+            mode={modalConfig.mode}
+            initialService={modalConfig.service}
+            onClose={() => setModalConfig({ isOpen: false, mode: 'create', service: '' })}
+            onConfirm={handleModalConfirm}
+          />
+        )}
 
         {/* Modal de visualización */}
         {revealedModal.isOpen && (
-          <div className="pwd-modal-overlay">
-            <div className="pwd-modal-card" style={{ textAlign: 'center' }}>
+          <div className="pwd-modal-overlay" onClick={() => setRevealedModal({ isOpen: false, text: '', service: '' })}>
+            <div className="pwd-modal-card" style={{ textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
               <h3>Password for {revealedModal.service}</h3>
               <div style={{ background: '#fff', color: '#000', padding: '12px', borderRadius: '6px', fontFamily: 'monospace', fontSize: '1.2rem', fontWeight: 'bold' }}>
                 {revealedModal.text}
@@ -201,6 +229,40 @@ export default function PasswordManager({ user, onNavigate }) {
                 </button>
                 <button className="pwd-btn-cancel" onClick={() => setRevealedModal({ isOpen: false, text: '', service: '' })}>
                   Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Confirmación de Eliminación de Servicio (sin icono gigante) */}
+        {deletingService && (
+          <div className="pwd-modal-overlay" onClick={() => !isDeleting && setDeletingService(null)}>
+            <div className="delete-service-modal-card" onClick={(e) => e.stopPropagation()}>
+              <h3 className="delete-service-title">Delete Saved Password?</h3>
+              <p className="delete-service-text">
+                Are you sure you want to permanently delete credentials for <strong>{deletingService}</strong>?
+              </p>
+              <p className="delete-service-subtext">
+                This will permanently remove the encrypted entry from your vault. This action cannot be undone.
+              </p>
+
+              <div className="delete-service-actions">
+                <button
+                  type="button"
+                  className="btn-cancel-service-delete"
+                  onClick={() => setDeletingService(null)}
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn-confirm-service-delete"
+                  onClick={handleConfirmDeleteService}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? 'Deleting...' : 'Yes, Delete Service'}
                 </button>
               </div>
             </div>

@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS services (
   CONSTRAINT unique_user_service UNIQUE (user_id, service_name)
 );
 
--- Hashes bcrypt válidos de '1234asdf'
+-- 1. Insert seed users (Password for all: 1234asdf)
 INSERT INTO users (username, email, hashed_password, first_name, last_name, enterprise, admin) VALUES
 ('admin', 'admin@example.com', '$2a$12$v1yAc3TKrHZU.QMxH0MKB.HXwvjrLZN/5XcFO4jDEIAXDInCBfXke', 'Administrator', 'System', 'Cookies.SA', true),
 ('analopez', 'ana@example.com', '$2a$12$.F0AaKAcaf.h03cYZybft.4nHNsPuf0o3pO./x6vI4kZYjJvAOni.', 'Ana', 'López', 'Cookies.SA', false)
@@ -39,10 +39,13 @@ INSERT INTO users (username, email, hashed_password, first_name, last_name, ente
 ON CONFLICT (username) DO UPDATE 
 SET first_name = EXCLUDED.first_name, last_name = EXCLUDED.last_name;
 
-INSERT INTO tests (user_id, correct_answers, total_questions, test_date, details) VALUES
-(2, 9, 10, NOW() - INTERVAL '2 days', '[
+-- 2. Insert seed tests safely by username lookup (prevents foreign key errors)
+INSERT INTO tests (user_id, correct_answers, total_questions, test_date, details)
+SELECT user_id, 9, 10, NOW() - INTERVAL '2 days', '[
   {"id":1, "subject":"Security Alert", "userAnswer":"Phishing", "solution":"Phishing", "isCorrect":true, "explanation":"Spoofed sender domain."},
   {"id":2, "subject":"Quarterly Bonus", "userAnswer":"Phishing", "solution":"Phishing", "isCorrect":true, "explanation":"Urgency and malicious link."}
-]'::jsonb),
-(2, 7, 10, NOW() - INTERVAL '15 days', '[]'::jsonb),
-(3, 4, 10, NOW() - INTERVAL '5 days', '[]'::jsonb);
+]'::jsonb FROM users WHERE username = 'analopez'
+UNION ALL
+SELECT user_id, 7, 10, NOW() - INTERVAL '15 days', '[]'::jsonb FROM users WHERE username = 'analopez'
+UNION ALL
+SELECT user_id, 4, 10, NOW() - INTERVAL '5 days', '[]'::jsonb FROM users WHERE username = 'carlosg';
