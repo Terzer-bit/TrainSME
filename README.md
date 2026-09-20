@@ -22,14 +22,13 @@ In case you don't have it, it can be downloaded from [here](https://www.docker.c
 
 #### <a name="installation"></a>Installation and Execution
 
-1.  Clone the repository:  
+1.  Clone the repository and navigate into the folder:  
 	```
 	git clone https://github.com/Terzer-bit/TrainSME.git
+ 	cd TrainSME 
 	```  
-2. Execute docker desktop
-3. Change directory to the project folder:  
-	`` cd TrainSME `` *for PowerShell*  
-	`` chdir TrainSME`` *for cmd*  
+2. Copy `.env.example` to `.env` (`cp .env.example .env`) and fill in your configuration variables.
+3. Execute docker desktop
 4. Run the following command to run the project for the first time:
 ```
 	docker-compose up -d --build
