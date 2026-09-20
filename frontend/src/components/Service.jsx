@@ -18,7 +18,7 @@ export default function Service({ serviceName, onCopy, onSee, onRegenerate, onDe
         </div>
 
         <div className="service-quick-actions" onClick={(e) => e.stopPropagation()}>
-          {/* Botón de copia rápida fuera del modal */}
+          {/* Botón de copia rápida */}
           <button
             className="quick-icon-btn copy"
             title="Copy password to clipboard"
@@ -30,6 +30,7 @@ export default function Service({ serviceName, onCopy, onSee, onRegenerate, onDe
             </svg>
           </button>
 
+          {/* Botón de eliminar */}
           <button
             className="quick-icon-btn delete"
             title="Delete service"
@@ -48,7 +49,7 @@ export default function Service({ serviceName, onCopy, onSee, onRegenerate, onDe
       {isExpanded && (
         <div className="service-expanded-drawer">
           <button className="drawer-btn regenerate" onClick={() => onRegenerate(serviceName)}>
-            Regenerate password
+            Edit service / Generate new password
           </button>
           <button className="drawer-btn see" onClick={() => onSee(serviceName)}>
             See password

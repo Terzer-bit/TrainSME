@@ -103,11 +103,10 @@ export default function PasswordManager({ user, onNavigate }) {
       });
 
       if (res.ok) {
-        // Actualización reactiva instantánea en la interfaz
         setServices((prev) => prev.filter((s) => s.service_name !== deletingService));
         toast.info(`Deleted password entry for ${deletingService}`);
         setDeletingService(null);
-        fetchServices(); // Sincronización en segundo plano
+        fetchServices();
       } else {
         const data = await res.json();
         toast.error(data.error || 'Failed to delete service');
@@ -120,31 +119,42 @@ export default function PasswordManager({ user, onNavigate }) {
     }
   };
 
-  // Guardar (crear o actualizar)
-  const handleModalConfirm = async ({ service, password, length }) => {
+  // Guardar (crear nuevo o renombrar/actualizar existente)
+  const handleModalConfirm = async ({ service, old_service, password, length }) => {
     const masterPassword = localStorage.getItem('password');
-    const endpoint = modalConfig.mode === 'create' 
+    const isCreate = modalConfig.mode === 'create';
+    const endpoint = isCreate 
       ? 'http://localhost:5000/api/password-manager/add' 
       : 'http://localhost:5000/api/password-manager/update';
     
-    const method = modalConfig.mode === 'create' ? 'POST' : 'PUT';
+    const method = isCreate ? 'POST' : 'PUT';
+
+    const payload = isCreate ? {
+      service: service,
+      user_id: user.user_id,
+      password: masterPassword,
+      custom_password: password,
+      length
+    } : {
+      old_service: old_service || modalConfig.service,
+      service: service,
+      new_service: service,
+      user_id: user.user_id,
+      password: masterPassword,
+      custom_password: password,
+      length
+    };
 
     try {
       const res = await fetch(endpoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          service,
-          user_id: user.user_id,
-          password: masterPassword,
-          custom_password: password,
-          length
-        })
+        body: JSON.stringify(payload)
       });
 
       const data = await res.json();
       if (res.ok) {
-        toast.success(modalConfig.mode === 'create' ? 'Service added successfully!' : 'Password updated!');
+        toast.success(isCreate ? 'Service added successfully!' : 'Service updated successfully!');
         setModalConfig({ isOpen: false, mode: 'create', service: '' });
         fetchServices();
       } else {
@@ -161,7 +171,6 @@ export default function PasswordManager({ user, onNavigate }) {
       <Menu activeItem="password-manager" onNavigate={onNavigate} user={user} />
 
       <main className="vault-content-area">
-        {/* Cabecera alineada a la izquierda con separador */}
         <div className="vault-section-header">
           <h1 className="vault-header-title">AES-256-GCM Password Manager</h1>
           <p className="vault-header-desc">
@@ -196,7 +205,7 @@ export default function PasswordManager({ user, onNavigate }) {
           )}
         </div>
 
-        {/* Modal de añadir / regenerar con clave dinámica para forzar reinicio */}
+        {/* Modal de añadir / renombrar / regenerar */}
         {modalConfig.isOpen && (
           <PasswordModal
             key={`${modalConfig.mode}-${modalConfig.service}-${Date.now()}`}
@@ -212,7 +221,7 @@ export default function PasswordManager({ user, onNavigate }) {
         {revealedModal.isOpen && (
           <div className="pwd-modal-overlay" onClick={() => setRevealedModal({ isOpen: false, text: '', service: '' })}>
             <div className="pwd-modal-card" style={{ textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
-              <h3>Password for {revealedModal.service}</h3>
+              <h3>Password for: {revealedModal.service}</h3>
               <div style={{ background: '#fff', color: '#000', padding: '12px', borderRadius: '6px', fontFamily: 'monospace', fontSize: '1.2rem', fontWeight: 'bold' }}>
                 {revealedModal.text}
               </div>
@@ -235,7 +244,7 @@ export default function PasswordManager({ user, onNavigate }) {
           </div>
         )}
 
-        {/* Modal de Confirmación de Eliminación de Servicio (sin icono gigante) */}
+        {/* Modal de Confirmación de Eliminación de Servicio */}
         {deletingService && (
           <div className="pwd-modal-overlay" onClick={() => !isDeleting && setDeletingService(null)}>
             <div className="delete-service-modal-card" onClick={(e) => e.stopPropagation()}>

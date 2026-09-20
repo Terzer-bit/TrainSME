@@ -12,7 +12,6 @@ export default function PasswordModal({
   const [passwordValue, setPasswordValue] = useState('');
   const [length, setLength] = useState(16);
 
-  // Reiniciar estado cada vez que se abre o cambian las props
   useEffect(() => {
     if (isOpen) {
       setServiceName(mode === 'create' ? '' : initialService);
@@ -45,12 +44,13 @@ export default function PasswordModal({
   };
 
   const handleConfirm = () => {
-    if (mode === 'create' && !serviceName.trim()) {
+    if (!serviceName.trim()) {
       alert('Please enter a service name.');
       return;
     }
     onConfirm({
-      service: mode === 'create' ? serviceName.trim() : initialService,
+      service: serviceName.trim(),
+      old_service: initialService,
       password: passwordValue,
       length
     });
@@ -61,31 +61,34 @@ export default function PasswordModal({
       <div className="pwd-modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="pwd-modal-header">
           <h3 className="pwd-modal-title">
-            {mode === 'create' ? 'Add new service password' : `Regenerate password for ${initialService}`}
+            {mode === 'create' ? 'Add new service password' : `Edit service: ${initialService}`}
           </h3>
           <button className="pwd-modal-close-icon" onClick={onClose}>✕</button>
         </div>
 
-        {mode === 'create' && (
-          <div className="pwd-input-group">
-            <label className="pwd-label">Service name *</label>
-            <input
-              type="text"
-              placeholder="e.g. GitHub, AWS, Google Cloud"
-              value={serviceName}
-              onChange={(e) => setServiceName(e.target.value)}
-              className="pwd-input-field"
-              autoFocus
-            />
-          </div>
-        )}
+        {/* Input de Nombre del Servicio siempre editable */}
+        <div className="pwd-input-group">
+          <label className="pwd-label">Service name *</label>
+          <input
+            type="text"
+            placeholder="e.g. GitHub, AWS, Google Cloud"
+            value={serviceName}
+            onChange={(e) => setServiceName(e.target.value)}
+            className="pwd-input-field"
+            autoFocus
+          />
+        </div>
 
         <div className="pwd-input-group">
-          <label className="pwd-label">Password (type manually or generate)</label>
+          <label className="pwd-label">
+            {mode === 'create'
+              ? 'Password (type manually or generate)'
+              : 'New Password (optional — leave blank to keep current password)'}
+          </label>
           <div className="pwd-input-with-button">
             <input
               type="text"
-              placeholder="Enter or generate password"
+              placeholder={mode === 'create' ? 'Enter or generate password' : 'Enter new password (optional)'}
               value={passwordValue}
               onChange={(e) => setPasswordValue(e.target.value)}
               className="pwd-input-field"
@@ -114,7 +117,7 @@ export default function PasswordModal({
         <div className="pwd-modal-actions">
           <button className="pwd-btn-cancel" onClick={onClose}>Cancel</button>
           <button className="pwd-btn-confirm" onClick={handleConfirm}>
-            {mode === 'create' ? 'Save Service' : 'Update Password'}
+            {mode === 'create' ? 'Save Service' : 'Save Changes'}
           </button>
         </div>
       </div>

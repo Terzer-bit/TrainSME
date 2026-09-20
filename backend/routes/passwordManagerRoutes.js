@@ -6,9 +6,7 @@ const router = express.Router();
 // Listar servicios de un usuario
 router.post('/api/password-manager/services', async (req, res) => {
   const { user_id } = req.body;
-  if (!user_id) {
-    return res.status(400).json({ error: 'Missing user_id' });
-  }
+  if (!user_id) return res.status(400).json({ error: 'Missing user_id' });
 
   try {
     const result = await pool.query(
@@ -26,7 +24,7 @@ router.post('/api/password-manager/services', async (req, res) => {
   }
 });
 
-// Añadir nuevo servicio (con contraseña manual o autogenerada)
+// Guardar servicio nuevo
 router.post('/api/password-manager/add', async (req, res) => {
   const { service, user_id, password, custom_password, length = 16 } = req.body;
 
@@ -34,8 +32,8 @@ router.post('/api/password-manager/add', async (req, res) => {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
 
-  const plaintextSubkey = custom_password && custom_password.trim().length > 0 
-    ? custom_password.trim() 
+  const plaintextSubkey = custom_password && custom_password.trim().length > 0
+    ? custom_password.trim()
     : generateRandomSubkey(Number(length));
 
   try {
@@ -53,48 +51,99 @@ router.post('/api/password-manager/add', async (req, res) => {
   } catch (err) {
     console.error('Error adding service:', err);
     if (err.code === '23505') {
-      return res.status(409).json({ error: 'Service already exists for this user' });
+      return res.status(409).json({ error: 'A service with this name already exists.' });
     }
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// Regenerar o actualizar contraseña de servicio existente
+// Editar servicio (Renombrar nombre y/o actualizar contraseña)
 router.put('/api/password-manager/update', async (req, res) => {
-  const { service, user_id, password, custom_password, length = 16 } = req.body;
+  const { old_service, service, new_service, user_id, password, custom_password, length = 16 } = req.body;
 
-  if (!service || !user_id || !password) {
-    return res.status(400).json({ error: 'Missing required parameters' });
+  const targetServiceName = (old_service || service || '').trim();
+  const updatedServiceName = (new_service || service || old_service || '').trim();
+
+  if (!targetServiceName || !user_id) {
+    return res.status(400).json({ error: 'Missing target service name or user_id' });
   }
 
-  const plaintextSubkey = custom_password && custom_password.trim().length > 0 
-    ? custom_password.trim() 
-    : generateRandomSubkey(Number(length));
+  if (!updatedServiceName) {
+    return res.status(400).json({ error: 'Service name cannot be empty' });
+  }
 
   try {
-    const { cipheredSubkey, iv, salt, authTag } = cipherSubkeyGCM(password, plaintextSubkey);
+    // 1. Obtener el servicio actual
+    const existing = await pool.query(
+      'SELECT service_id, service_name, salt, iv, auth_tag, subkey FROM services WHERE service_name = $1 AND user_id = $2',
+      [targetServiceName, user_id]
+    );
 
-    const updateQuery = `
-      UPDATE services
-      SET salt = $1, iv = $2, auth_tag = $3, subkey = $4, updated_at = NOW()
-      WHERE service_name = $5 AND user_id = $6
-      RETURNING service_id, service_name;
-    `;
-    const values = [salt, iv, authTag, cipheredSubkey, service.trim(), user_id];
-    const result = await pool.query(updateQuery, values);
-
-    if (result.rowCount === 0) {
+    if (existing.rows.length === 0) {
       return res.status(404).json({ error: 'Service not found' });
     }
 
-    res.status(200).json({ message: 'Password updated successfully', service: result.rows[0], updatedPassword: plaintextSubkey });
+    const currentRecord = existing.rows[0];
+
+    // 2. Si se renombra, verificar que el nuevo nombre no esté ya en uso
+    if (updatedServiceName.toLowerCase() !== targetServiceName.toLowerCase()) {
+      const conflict = await pool.query(
+        'SELECT service_id FROM services WHERE LOWER(service_name) = LOWER($1) AND user_id = $2 AND service_id != $3',
+        [updatedServiceName, user_id, currentRecord.service_id]
+      );
+      if (conflict.rows.length > 0) {
+        return res.status(409).json({ error: `A service named "${updatedServiceName}" already exists.` });
+      }
+    }
+
+    // 3. Determinar si se actualiza la contraseña o se mantiene la actual
+    let newSalt = currentRecord.salt;
+    let newIv = currentRecord.iv;
+    let newAuthTag = currentRecord.auth_tag;
+    let newSubkey = currentRecord.subkey;
+    let generatedPassword = null;
+
+    // Si se envió una nueva contraseña (no vacía)
+    if (custom_password && custom_password.trim().length > 0) {
+      if (!password) {
+        return res.status(400).json({ error: 'Master password is required to encrypt the new password' });
+      }
+      const plaintext = custom_password.trim();
+      const encrypted = cipherSubkeyGCM(password, plaintext);
+      newSalt = encrypted.salt;
+      newIv = encrypted.iv;
+      newAuthTag = encrypted.authTag;
+      newSubkey = encrypted.cipheredSubkey;
+      generatedPassword = plaintext;
+    }
+
+    // 4. Actualizar en base de datos
+    const updateQuery = `
+      UPDATE services
+      SET service_name = $1,
+          salt = $2,
+          iv = $3,
+          auth_tag = $4,
+          subkey = $5,
+          updated_at = NOW()
+      WHERE service_id = $6
+      RETURNING service_id, service_name, updated_at;
+    `;
+    const values = [updatedServiceName, newSalt, newIv, newAuthTag, newSubkey, currentRecord.service_id];
+    const result = await pool.query(updateQuery, values);
+
+    res.status(200).json({
+      message: 'Service updated successfully',
+      service: result.rows[0],
+      updatedPassword: generatedPassword
+    });
   } catch (err) {
-    console.error('Error updating service password:', err);
+    console.error('Error updating service:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// Ver / Descifrar contraseña de servicio
+// Ver y descifrar contraseña
 router.post('/api/password-manager/see', async (req, res) => {
   const { service, user_id, password } = req.body;
 
