@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
-import logo from '../assets/Logo4-removebg.svg';
+import logo from '../assets/logo-removebg.png';
 
 export default function Login({ onLoginSuccess, onNavigateToRegister }) {
   const [username, setUsername] = useState('');

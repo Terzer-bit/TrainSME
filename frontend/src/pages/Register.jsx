@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Register.css';
-import logo from '../assets/Logo4-removebg.svg';
+import logo from '../assets/logo-removebg.png';
 
 export default function Register({ onRegisterSuccess, onNavigateToLogin }) {
   const [formData, setFormData] = useState({
