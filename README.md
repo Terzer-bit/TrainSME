@@ -1,4 +1,7 @@
-# TrainSME
+<p align="center">
+  <img src="./frontend/src/assets/logo.png" alt="TrainSME Logo" width="320" />
+</p>
+
 
 ### Table of Contents
 ----
